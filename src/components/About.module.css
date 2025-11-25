@@ -1,0 +1,132 @@
+.section {
+    padding: 8rem 10%;
+    background-color: var(--color-dark-turquoise);
+    color: white;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 4rem;
+}
+
+.content {
+    flex: 1;
+}
+
+.heading {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    color: var(--color-yellow);
+}
+
+.text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+    max-width: 600px;
+}
+
+.stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-turquoise);
+}
+
+.label {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+}
+
+.visual {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagePlaceholder {
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+.circle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: var(--color-pea-green);
+    opacity: 0.5;
+    filter: blur(40px);
+}
+
+.square {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    transform: rotate(-10deg);
+}
+
+@media (max-width: 1024px) {
+    .section {
+        padding: 4rem 5%;
+    }
+
+    .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .text {
+        margin: 0 auto 1.5rem;
+    }
+
+    .stats {
+        justify-content: center;
+    }
+
+    .visual {
+        margin-top: 4rem;
+    }
+
+    .imagePlaceholder {
+        width: 300px;
+        height: 300px;
+    }
+
+    .circle,
+    .square {
+        width: 200px;
+        height: 200px;
+    }
+}

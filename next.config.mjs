@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  // output: 'export', // Removed for Vercel to enable Image Optimization and other features
 };
 
 export default nextConfig;
