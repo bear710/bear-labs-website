@@ -33,16 +33,20 @@
 
 .gradient {
     background: linear-gradient(90deg,
-            var(--color-turquoise),
-            var(--color-yellow),
-            var(--color-pea-green),
-            var(--color-dark-turquoise),
-            var(--color-turquoise));
-    background-size: 200% auto;
+            #9FDDFF,
+            #FFF066,
+            #9CAE4A,
+            #5A9BA0,
+            #9FDDFF,
+            #FFF066,
+            #9CAE4A,
+            #5A9BA0,
+            #9FDDFF);
+    background-size: 300% auto;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradientShift 3s ease infinite;
+    animation: gradientShift 4s linear infinite;
 }
 
 @keyframes gradientShift {
@@ -50,12 +54,8 @@
         background-position: 0% center;
     }
 
-    50% {
-        background-position: 100% center;
-    }
-
     100% {
-        background-position: 0% center;
+        background-position: 300% center;
     }
 }
 
