@@ -89,7 +89,7 @@
     background: var(--accent-color);
     color: var(--color-black);
     transform: rotateY(180deg);
-    padding: 3rem 2rem;
+    padding: 4rem 2.5rem;
 }
 
 .productName {
