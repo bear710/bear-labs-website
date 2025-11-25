@@ -2,18 +2,29 @@
     padding: 4rem 10%;
     background-color: var(--color-black);
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
-.heading {
+.mainHeading {
     font-size: 3rem;
     font-weight: 900;
     margin-bottom: 4rem;
     text-align: center;
     letter-spacing: 0.2em;
     color: white;
+}
+
+.category {
+    margin-bottom: 6rem;
+}
+
+.categoryHeading {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 0.15em;
+    color: var(--color-turquoise);
+    text-transform: uppercase;
 }
 
 .grid {
@@ -75,7 +86,7 @@
     text-transform: uppercase;
 }
 
-.productTier {
+.productSubtitle {
     font-size: 1rem;
     font-weight: 400;
     opacity: 0.7;
@@ -86,21 +97,6 @@
 .description {
     font-size: 1.1rem;
     line-height: 1.5;
-    margin-bottom: 2rem;
     font-weight: 500;
-}
-
-.btn {
-    padding: 0.8rem 2rem;
-    background: var(--color-black);
-    color: white;
-    border: none;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.btn:hover {
-    transform: scale(1.05);
+    padding: 1rem;
 }
