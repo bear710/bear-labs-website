@@ -106,6 +106,23 @@ export default function ProductGrid() {
                     ))}
                 </div>
             </div>
+
+            {/* 510 Vapes Section */}
+            <div className={styles.category}>
+                <h3 className={styles.categoryHeading}>Live Resin 510 Vapes</h3>
+                <div className={styles.wideCard} style={{ '--accent-color': 'var(--color-turquoise)' }}>
+                    <div className={styles.cardInner}>
+                        <div className={styles.cardFront}>
+                            <h4 className={styles.productName}>Live Resin 510 Thread Vapes</h4>
+                            <span className={styles.productSubtitle}>Premium Live Resin Cartridges</span>
+                        </div>
+                        <div className={styles.cardBack}>
+                            <p className={styles.description}>Experience premium live resin in convenient 510-thread cartridges. High-quality hardware meets exceptional flavor for the ultimate on-the-go experience. [Description coming soon]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     );
 }
+```

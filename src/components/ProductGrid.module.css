@@ -33,6 +33,12 @@
     gap: 2rem;
 }
 
+.wideCard {
+    height: 500px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
 @media (max-width: 1400px) {
     .grid {
         grid-template-columns: repeat(2, 1fr);
