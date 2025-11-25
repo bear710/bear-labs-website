@@ -142,14 +142,25 @@
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
-    animation: logoPulse 3s ease-in-out infinite;
+    position: relative;
+}
+
+.logoContainer::before {
+    content: '';
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(129, 203, 210, 0.4) 0%, rgba(129, 203, 210, 0.1) 40%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
 }
 
 .logo {
     width: 400px;
     height: auto;
-    filter: drop-shadow(0 0 30px rgba(129, 203, 210, 0.4));
-    transition: filter 0.3s ease;
+    filter: drop-shadow(0 0 40px rgba(129, 203, 210, 0.6));
 }
 
 .estText {
@@ -168,20 +179,6 @@
     font-size: 2rem;
     font-weight: 800;
     letter-spacing: 0.2em;
-}
-
-@keyframes logoPulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 30px rgba(129, 203, 210, 0.4));
-    }
-
-    50% {
-        transform: scale(1.05);
-        filter: drop-shadow(0 0 50px rgba(129, 203, 210, 0.7));
-    }
 }
 
 @keyframes pulse {
