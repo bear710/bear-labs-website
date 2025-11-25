@@ -5,8 +5,8 @@ export default function Hero() {
         <section className={styles.hero}>
             <div className={styles.content}>
                 <h1 className={styles.title}>
-                    <span className={styles.highlight}>PREMIUM</span><br />
-                    CANNABIS EXTRACTS
+                    <span className={styles.highlight}>PREMIUM CANNABIS</span><br />
+                    VAPES, CONCENTRATES AND INGESTIBLES
                 </h1>
                 <p className={styles.subtitle}>
                     Community Driven. Solventless & BHO.
