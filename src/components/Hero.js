@@ -9,7 +9,7 @@ export default function Hero() {
                     <span className={styles.gradient}>VAPES CONCENTRATES AND INGESTIBLES</span>
                 </h1>
                 <p className={styles.subtitle}>
-                    Community Driven. Solventless & BHO.
+                    Smoke Better with Bear
                 </p>
                 <div className={styles.ctaGroup}>
                     <a href="#products" className={styles.ctaPrimary}>View Products</a>

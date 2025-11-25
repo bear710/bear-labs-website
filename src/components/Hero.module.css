@@ -60,10 +60,12 @@
 }
 
 .subtitle {
-    font-size: 1.5rem;
-    color: #888;
+    font-family: var(--font-bebas);
+    font-size: 3rem;
+    color: #fff;
     margin-bottom: 3rem;
-    font-weight: 300;
+    font-weight: 400;
+    letter-spacing: 0.05em;
 }
 
 .ctaGroup {
