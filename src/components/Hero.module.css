@@ -31,6 +31,34 @@
     -webkit-text-fill-color: var(--color-turquoise);
 }
 
+.gradient {
+    background: linear-gradient(90deg,
+            var(--color-turquoise),
+            var(--color-yellow),
+            var(--color-pea-green),
+            var(--color-dark-turquoise),
+            var(--color-turquoise));
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% center;
+    }
+
+    50% {
+        background-position: 100% center;
+    }
+
+    100% {
+        background-position: 0% center;
+    }
+}
+
 .subtitle {
     font-size: 1.5rem;
     color: #888;
