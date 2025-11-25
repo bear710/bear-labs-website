@@ -31,6 +31,37 @@ const liveRosinProducts = [
     }
 ];
 
+const liveResinProducts = [
+    {
+        id: 1,
+        name: "Tier 1 Live Resin",
+        subtitle: "Premium Spectrum Sauce",
+        description: "This is the top-tier resin experience—whether it's live or cured. We're talking clean, flavorful diamonds drenched in terp-loaded sauce, extracted from rare, farm-direct genetics. Whether it starts as fresh frozen or expertly cured flower, the outcome is the same: loud aroma, vibrant color, and smooth potency. This is the resin that sets the bar at Bear Labs.",
+        color: "var(--color-yellow)"
+    },
+    {
+        id: 2,
+        name: "Tier 2 Live Resin",
+        subtitle: "Craft Resin With A Punch",
+        description: "Tier 2 brings serious quality at a more accessible price. These live or cured resin batches often punch above their tier, delivering nearly Tier 1 flavor and effects thanks to high-yielding cultivars. The sauce might be a little less runny, or the diamonds a little smaller—but the dab still hits hard. Premium vibes without the premium price.",
+        color: "var(--color-turquoise)"
+    },
+    {
+        id: 3,
+        name: "Tier 3 Live Resin",
+        subtitle: "Everyday Essential",
+        description: "This is the people's resin. Crafted from widely available strains, Tier 3 live and cured resin brings you solid flavor, dependable potency, and a price that makes sense for your daily dab. You might notice slight color or texture differences compared to higher tiers, but the quality remains solid and consistent. A workhorse in the best way.",
+        color: "var(--color-pea-green)"
+    },
+    {
+        id: 4,
+        name: "Tier 4 Live Resin",
+        subtitle: "Budget Banger",
+        description: "Don't sleep on Tier 4. This is the most wallet-friendly option in the Bear lineup, but it still brings the fire. You'll find full-spectrum resin that might run a little darker or come from older harvests, but it still delivers on flavor and effect. Whether it's live or cured, it's the best bang for your buck—perfect for stretching the stash without compromising on quality.",
+        color: "var(--color-dark-turquoise)"
+    }
+];
+
 export default function ProductGrid() {
     return (
         <section id="products" className={styles.section}>
@@ -41,6 +72,26 @@ export default function ProductGrid() {
                 <h3 className={styles.categoryHeading}>Live Rosin</h3>
                 <div className={styles.grid}>
                     {liveRosinProducts.map((product) => (
+                        <div key={product.id} className={styles.card} style={{ '--accent-color': product.color }}>
+                            <div className={styles.cardInner}>
+                                <div className={styles.cardFront}>
+                                    <h4 className={styles.productName}>{product.name}</h4>
+                                    <span className={styles.productSubtitle}>{product.subtitle}</span>
+                                </div>
+                                <div className={styles.cardBack}>
+                                    <p className={styles.description}>{product.description}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Live Resin Section */}
+            <div className={styles.category}>
+                <h3 className={styles.categoryHeading}>Live Resin</h3>
+                <div className={styles.grid}>
+                    {liveResinProducts.map((product) => (
                         <div key={product.id} className={styles.card} style={{ '--accent-color': product.color }}>
                             <div className={styles.cardInner}>
                                 <div className={styles.cardFront}>
