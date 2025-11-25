@@ -137,6 +137,29 @@
     animation: float 6s ease-in-out infinite;
 }
 
+.logoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    animation: logoPulse 3s ease-in-out infinite;
+}
+
+.logo {
+    width: 400px;
+    height: auto;
+    filter: drop-shadow(0 0 30px rgba(129, 203, 210, 0.4));
+    transition: filter 0.3s ease;
+}
+
+.estText {
+    font-family: var(--font-bebas);
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    color: var(--color-turquoise);
+    text-shadow: 0 0 20px rgba(129, 203, 210, 0.5);
+}
+
 .cardContent {
     text-align: center;
 }
@@ -145,6 +168,20 @@
     font-size: 2rem;
     font-weight: 800;
     letter-spacing: 0.2em;
+}
+
+@keyframes logoPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 30px rgba(129, 203, 210, 0.4));
+    }
+
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 50px rgba(129, 203, 210, 0.7));
+    }
 }
 
 @keyframes pulse {
