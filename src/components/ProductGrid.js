@@ -33,7 +33,7 @@ const liveRosinProducts = [
         subtitle: "The Sleeper Hit",
         description: "Bear Labs doesn't do 'low quality,' and this tier proves it. Pressed from 90u-160u, this is the most affordable way to experience true solventless excellence. It may have a slightly darker hue or a more mellow terp profile, but it still delivers a premium dab at a price that won't break the bank.",
         color: "var(--color-dark-turquoise)",
-        image: "/images/products/rosin-jar-placeholder.png"
+        image: "/images/products/tier4-live-rosin.jpg"
     }
 ];
 
