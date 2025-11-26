@@ -9,7 +9,7 @@ const liveRosinProducts = [
         subtitle: "The Apex of Excellence",
         description: "This is the supreme drop. Our 90u-120u live rosin is crafted from ultra-exclusive, pheno-hunted, farm-specific genetics. Expect striking color, insane terp profiles, and an unmatched flavor experience. If you know, you know - this is the peak of solventless perfection.",
         color: "var(--color-yellow)",
-        image: "/images/products/rosin-jar-placeholder.png"
+        image: "/images/products/tier1-live-rosin.jpg"
     },
     {
         id: 2,
