@@ -87,7 +87,7 @@
     transition: all 0.4s ease;
     pointer-events: none;
     z-index: 100;
-    background: var(--color-black);
+    background: #000000;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     display: flex;
