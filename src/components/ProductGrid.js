@@ -25,7 +25,7 @@ const liveRosinProducts = [
         subtitle: "Fire for the People",
         description: "The perfect balance between craft and value. This 90u-120u live rosin comes from high-yielding, widely cultivated strains that still bring elite flavor, aroma, and potency. It may not be as rare as Tier 1, but trust—it still slaps.",
         color: "var(--color-pea-green)",
-        image: "/images/products/rosin-jar-placeholder.png"
+        image: "/images/products/tier3-live-rosin.jpg"
     },
     {
         id: 4,
