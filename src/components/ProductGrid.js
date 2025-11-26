@@ -1,3 +1,5 @@
+'use client';
+import { useState } from 'react';
 import styles from './ProductGrid.module.css';
 
 const liveRosinProducts = [
@@ -6,28 +8,32 @@ const liveRosinProducts = [
         name: "Tier 1 Live Rosin",
         subtitle: "The Apex of Excellence",
         description: "This is the supreme drop. Our 90u-120u live rosin is crafted from ultra-exclusive, pheno-hunted, farm-specific genetics. Expect striking color, insane terp profiles, and an unmatched flavor experience. If you know, you know - this is the peak of solventless perfection.",
-        color: "var(--color-yellow)"
+        color: "var(--color-yellow)",
+        image: "/images/products/rosin-jar-placeholder.png"
     },
     {
         id: 2,
         name: "Tier 2 Live Rosin",
         subtitle: "Top-Shelf Without the Top Price",
         description: "Sometimes, the best batches just hit different. When our Tier 1 strains yield exceptionally well, we pass the savings on to you. Same high-caliber 90u-120u live rosin, same premium experience—just at a friendlier price.",
-        color: "var(--color-turquoise)"
+        color: "var(--color-turquoise)",
+        image: "/images/products/rosin-jar-placeholder.png"
     },
     {
         id: 3,
         name: "Tier 3 Live Rosin",
         subtitle: "Fire for the People",
         description: "The perfect balance between craft and value. This 90u-120u live rosin comes from high-yielding, widely cultivated strains that still bring elite flavor, aroma, and potency. It may not be as rare as Tier 1, but trust—it still slaps.",
-        color: "var(--color-pea-green)"
+        color: "var(--color-pea-green)",
+        image: "/images/products/rosin-jar-placeholder.png"
     },
     {
         id: 4,
         name: "Tier 4 Live Rosin",
         subtitle: "The Sleeper Hit",
         description: "Bear Labs doesn't do 'low quality,' and this tier proves it. Pressed from 90u-160u, this is the most affordable way to experience true solventless excellence. It may have a slightly darker hue or a more mellow terp profile, but it still delivers a premium dab at a price that won't break the bank.",
-        color: "var(--color-dark-turquoise)"
+        color: "var(--color-dark-turquoise)",
+        image: "/images/products/rosin-jar-placeholder.png"
     }
 ];
 
@@ -37,30 +43,80 @@ const liveResinProducts = [
         name: "Tier 1 Live Resin",
         subtitle: "Premium Spectrum Sauce",
         description: "This is the top-tier resin experience—whether it's live or cured. We're talking clean, flavorful diamonds drenched in terp-loaded sauce, extracted from rare, farm-direct genetics. Whether it starts as fresh frozen or expertly cured flower, the outcome is the same: loud aroma, vibrant color, and smooth potency. This is the resin that sets the bar at Bear Labs.",
-        color: "var(--color-yellow)"
+        color: "var(--color-yellow)",
+        image: "/images/products/resin-jar-placeholder.png"
     },
     {
         id: 2,
         name: "Tier 2 Live Resin",
         subtitle: "Craft Resin With A Punch",
         description: "Tier 2 brings serious quality at a more accessible price. These live or cured resin batches often punch above their tier, delivering nearly Tier 1 flavor and effects thanks to high-yielding cultivars. The sauce might be a little less runny, or the diamonds a little smaller—but the dab still hits hard. Premium vibes without the premium price.",
-        color: "var(--color-turquoise)"
+        color: "var(--color-turquoise)",
+        image: "/images/products/resin-jar-placeholder.png"
     },
     {
         id: 3,
         name: "Tier 3 Live Resin",
         subtitle: "Everyday Essential",
         description: "This is the people's resin. Crafted from widely available strains, Tier 3 live and cured resin brings you solid flavor, dependable potency, and a price that makes sense for your daily dab. You might notice slight color or texture differences compared to higher tiers, but the quality remains solid and consistent. A workhorse in the best way.",
-        color: "var(--color-pea-green)"
+        color: "var(--color-pea-green)",
+        image: "/images/products/resin-jar-placeholder.png"
     },
     {
         id: 4,
         name: "Tier 4 Live Resin",
         subtitle: "Budget Banger",
         description: "Don't sleep on Tier 4. This is the most wallet-friendly option in the Bear lineup, but it still brings the fire. You'll find full-spectrum resin that might run a little darker or come from older harvests, but it still delivers on flavor and effect. Whether it's live or cured, it's the best bang for your buck—perfect for stretching the stash without compromising on quality.",
-        color: "var(--color-dark-turquoise)"
+        color: "var(--color-dark-turquoise)",
+        image: "/images/products/resin-jar-placeholder.png"
     }
 ];
+
+function ProductCard({ product }) {
+    const [isHovered, setIsHovered] = useState(false);
+    const [showImage, setShowImage] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+        // Delay image appearance until after flip animation (0.8s)
+        setTimeout(() => {
+            setShowImage(true);
+        }, 800);
+    };
+
+    const handleMouseLeave = () => {
+        // Hide image first
+        setShowImage(false);
+        // Flip card back after image slides away (0.4s)
+        setTimeout(() => {
+            setIsHovered(false);
+        }, 400);
+    };
+
+    return (
+        <div
+            className={styles.card}
+            style={{ '--accent-color': product.color }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className={`${styles.cardInner} ${isHovered ? styles.flipped : ''}`}>
+                <div className={styles.cardFront}>
+                    <h4 className={styles.productName}>{product.name}</h4>
+                    <span className={styles.productSubtitle}>{product.subtitle}</span>
+                </div>
+                <div className={styles.cardBack}>
+                    <p className={styles.description}>{product.description}</p>
+                </div>
+            </div>
+            {product.image && (
+                <div className={`${styles.productImage} ${showImage ? styles.showImage : ''}`}>
+                    <img src={product.image} alt={product.name} />
+                </div>
+            )}
+        </div>
+    );
+}
 
 export default function ProductGrid() {
     return (
@@ -72,17 +128,7 @@ export default function ProductGrid() {
                 <h3 className={styles.categoryHeading}>Live Rosin</h3>
                 <div className={styles.grid}>
                     {liveRosinProducts.map((product) => (
-                        <div key={product.id} className={styles.card} style={{ '--accent-color': product.color }}>
-                            <div className={styles.cardInner}>
-                                <div className={styles.cardFront}>
-                                    <h4 className={styles.productName}>{product.name}</h4>
-                                    <span className={styles.productSubtitle}>{product.subtitle}</span>
-                                </div>
-                                <div className={styles.cardBack}>
-                                    <p className={styles.description}>{product.description}</p>
-                                </div>
-                            </div>
-                        </div>
+                        <ProductCard key={product.id} product={product} />
                     ))}
                 </div>
             </div>
@@ -92,17 +138,7 @@ export default function ProductGrid() {
                 <h3 className={styles.categoryHeading}>Live Resin</h3>
                 <div className={styles.grid}>
                     {liveResinProducts.map((product) => (
-                        <div key={product.id} className={styles.card} style={{ '--accent-color': product.color }}>
-                            <div className={styles.cardInner}>
-                                <div className={styles.cardFront}>
-                                    <h4 className={styles.productName}>{product.name}</h4>
-                                    <span className={styles.productSubtitle}>{product.subtitle}</span>
-                                </div>
-                                <div className={styles.cardBack}>
-                                    <p className={styles.description}>{product.description}</p>
-                                </div>
-                            </div>
-                        </div>
+                        <ProductCard key={product.id} product={product} />
                     ))}
                 </div>
             </div>
