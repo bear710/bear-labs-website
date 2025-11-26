@@ -20,9 +20,28 @@
     margin-bottom: 4rem;
 }
 
-.mapContainer {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    min-height: 600px;
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+.storeButton {
+    padding: 1.5rem 4rem;
+    background: linear-gradient(135deg, var(--color-turquoise) 0%, var(--color-dark-turquoise) 100%);
+    color: var(--color-black);
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(129, 203, 210, 0.3);
+}
+
+.storeButton:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(129, 203, 210, 0.5);
 }
