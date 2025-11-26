@@ -64,6 +64,16 @@
     pointer-events: none;
 }
 
+/* Hide card to the LEFT when 4th card (last in row) is hovered */
+.card:nth-child(4n):hover {
+    z-index: 101;
+}
+
+.card:nth-child(4n-1):has(+ .card:hover) {
+    opacity: 0;
+    pointer-events: none;
+}
+
 .cardInner {
     position: relative;
     width: 100%;
@@ -105,9 +115,20 @@
     overflow: hidden;
 }
 
+/* 4th card (last in row) slides LEFT instead of right */
+.card:nth-child(4n) .productImage {
+    left: auto;
+    right: 100%;
+}
+
 .productImage.showImage {
     left: calc(100% + 2rem);
     opacity: 1 !important;
+}
+
+.card:nth-child(4n) .productImage.showImage {
+    left: auto;
+    right: calc(100% + 2rem);
 }
 
 .productImage img {
