@@ -87,13 +87,13 @@
     transition: all 0.4s ease;
     pointer-events: none;
     z-index: 100;
-    background: var(--accent-color);
+    background: #FFFFFF;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 3rem;
+    padding: 1.5rem;
     overflow: hidden;
 }
 
