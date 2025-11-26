@@ -72,6 +72,10 @@
     transform: rotateY(180deg);
 }
 
+.wideCard:hover .cardInner {
+    transform: rotateY(180deg);
+}
+
 .cardFront,
 .cardBack {
     position: absolute;

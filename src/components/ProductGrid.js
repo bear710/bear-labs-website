@@ -117,7 +117,7 @@ export default function ProductGrid() {
                             <span className={styles.productSubtitle}>Premium Live Resin Cartridges</span>
                         </div>
                         <div className={styles.cardBack}>
-                            <p className={styles.description}>Experience premium live resin in convenient 510-thread cartridges. High-quality hardware meets exceptional flavor for the ultimate on-the-go experience. [Description coming soon]</p>
+                            <p className={styles.description}>BEAR Labs Live Resin 510 vapes are filled with 100% live resin made from fresh-frozen flower harvested at peak ripeness, so every pull tastes like cracking open a jar of top-shelf nugs. By skipping the dry and cure stage, our live resin avoids harsh chlorophyll breakdown and oxidation, giving you a smoother, cleaner vape with less "burn" or "ashy" notes than cured resin carts. Each small-batch, handcrafted strain captures the plant exactly as it was when harvested, typically retaining 2–3x more terpenes for true-to-strain taste, loud flavor, and a bright, fresh aroma. Beyond THC and CBD, our process preserves more of the minor cannabinoids and volatile monoterpenes like pinene, limonene, and myrcene that are usually lost in drying, delivering a well-rounded, strain-specific entourage effect. All of this goodness is delivered through medical-grade ceramic hardware with a rotating cap that fits any battery orientation—premium live resin, zero shortcuts.</p>
                         </div>
                     </div>
                 </div>
