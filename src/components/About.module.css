@@ -54,7 +54,7 @@
 .number {
     font-size: 3rem;
     font-weight: 800;
-    color: var(--color-turquoise);
+    color: white;
     line-height: 1;
     margin-bottom: 0.5rem;
 }
@@ -64,7 +64,8 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-weight: 600;
-    opacity: 0.8;
+    color: white;
+    opacity: 0.9;
 }
 
 @media (max-width: 768px) {
