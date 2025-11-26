@@ -5,6 +5,7 @@ import ProductGrid from '../components/ProductGrid';
 import StoreLocator from '../components/StoreLocator';
 import Merch from '../components/Merch';
 import About from '../components/About';
+import CollabPartners from '../components/CollabPartners';
 import Footer from '../components/Footer';
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
       <StoreLocator />
       <Merch />
       <About />
+      <CollabPartners />
       <Footer />
     </main>
   );
