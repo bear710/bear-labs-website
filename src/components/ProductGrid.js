@@ -133,7 +133,7 @@ export default function ProductGrid() {
                             <span className={styles.productSubtitle}>Premium Cannabis-Infused Concentrate</span>
                         </div>
                         <div className={styles.cardBack}>
-                            <p className={styles.description}>Ampersand is a premium edible concentrate designed for versatility and precise dosing. [Description coming soon]</p>
+                            <p className={styles.description}>Meet Ampersand – the Smokeless Dab. This zero-calorie, zero-sugar edible live rosin concentrate melts on your tongue, then you simply swish and savor; in about five minutes you'll feel a clear, fast, and predictable lift every time. Because it absorbs through your mouth instead of your stomach, the experience feels closer to taking a dab or smoking your favorite strain than eating a traditional edible. Crafted from full-spectrum live rosin (never distillate), Ampersand keeps the plant's natural minor cannabinoids and terpenes intact for rich flavor and a layered, true-to-flower high. It's vegan, gluten-free, dairy-free, and discreet enough to enjoy almost anywhere—just add tongue.</p>
                         </div>
                     </div>
                 </div>
