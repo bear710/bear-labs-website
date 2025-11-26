@@ -17,7 +17,7 @@ const liveRosinProducts = [
         subtitle: "Top-Shelf Without the Top Price",
         description: "Sometimes, the best batches just hit different. When our Tier 1 strains yield exceptionally well, we pass the savings on to you. Same high-caliber 90u-120u live rosin, same premium experience—just at a friendlier price.",
         color: "var(--color-turquoise)",
-        image: "/images/products/rosin-jar-placeholder.png"
+        image: "/images/products/tier2-live-rosin.jpg"
     },
     {
         id: 3,
