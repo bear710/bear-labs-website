@@ -25,68 +25,16 @@
     margin-bottom: 4rem;
 }
 
-.merchShowcase {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%);
-    border-radius: 20px;
-    padding: 4rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.merchContent {
-    margin-bottom: 3rem;
-}
-
-.featuredText {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.featuredHeading {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--color-yellow);
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-.description {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 2rem;
-}
-
-.features {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.features li {
-    color: var(--color-turquoise);
-    font-size: 1.1rem;
-    font-weight: 600;
-    padding-left: 1.5rem;
-    position: relative;
-}
-
-.features li::before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    color: var(--color-yellow);
-    font-weight: 800;
+.productGrid {
+    margin-bottom: 4rem;
+    min-height: 400px;
 }
 
 .ctaContainer {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 2rem;
 }
 
 .merchButton {
