@@ -97,7 +97,7 @@
 }
 
 .productImage.showImage {
-    left: 110%;
+    left: calc(100% + 2rem);
     opacity: 1;
 }
 
