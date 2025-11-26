@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Hero from '../components/Hero';
 import ProductGrid from '../components/ProductGrid';
 import StoreLocator from '../components/StoreLocator';
+import Merch from '../components/Merch';
 import About from '../components/About';
 import Footer from '../components/Footer';
 
@@ -13,6 +14,7 @@ export default function Home() {
       <Hero />
       <ProductGrid />
       <StoreLocator />
+      <Merch />
       <About />
       <Footer />
     </main>
