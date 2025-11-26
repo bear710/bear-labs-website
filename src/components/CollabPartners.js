@@ -1,14 +1,12 @@
 import styles from './CollabPartners.module.css';
 
 export default function CollabPartners() {
-    // Placeholder data - we will replace these with real images once uploaded
     const partners = [
-        { id: 1, name: "Partner 1" },
-        { id: 2, name: "Partner 2" },
-        { id: 3, name: "Partner 3" },
-        { id: 4, name: "Partner 4" },
-        { id: 5, name: "Partner 5" },
-        { id: 6, name: "Partner 6" },
+        { id: 1, name: "Tychee Farms", image: "/images/partners/tychee-farms.png" },
+        { id: 2, name: "Partner", image: "/images/partners/snake-p.png" },
+        { id: 3, name: "Motley Terpz", image: "/images/partners/motley-terpz.png" },
+        { id: 4, name: "Four Fathers", image: "/images/partners/four-fathers.png" },
+        { id: 5, name: "Hogwash Pharms", image: "/images/partners/hogwash-pharms.png" },
     ];
 
     return (
@@ -18,10 +16,11 @@ export default function CollabPartners() {
                 <div className={styles.grid}>
                     {partners.map((partner) => (
                         <div key={partner.id} className={styles.logoContainer}>
-                            <div className={styles.placeholderLogo}>{partner.name}</div>
-                            {/* Once images are uploaded, we will use: 
-              <img src="/images/partner-logo.png" alt={partner.name} className={styles.logo} /> 
-              */}
+                            <img
+                                src={partner.image}
+                                alt={partner.name}
+                                className={styles.logo}
+                            />
                         </div>
                     ))}
                 </div>
