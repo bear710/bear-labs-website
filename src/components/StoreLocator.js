@@ -13,7 +13,7 @@ export default function StoreLocator() {
 
             <Script
                 src="https://bearlabs.wm.store/static/js/retailers-embed.js"
-                strategy="lazyOnload"
+                strategy="afterInteractive"
             />
         </section>
     );
