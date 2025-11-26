@@ -60,12 +60,13 @@
 }
 
 .label {
-    font-size: 1rem;
+    font-size: 3rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    font-weight: 600;
+    font-weight: 800;
     color: white;
     opacity: 0.9;
+    line-height: 1;
 }
 
 @media (max-width: 768px) {
