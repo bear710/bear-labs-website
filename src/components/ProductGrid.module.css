@@ -81,7 +81,7 @@
     position: absolute;
     top: 0;
     left: 100%;
-    width: 100%;
+    width: 102%;
     height: 100%;
     opacity: 0;
     transition: all 0.4s ease;
@@ -99,7 +99,7 @@
 
 .productImage.showImage {
     left: calc(100% + 2rem);
-    opacity: 1;
+    opacity: 1 !important;
 }
 
 .productImage img {
