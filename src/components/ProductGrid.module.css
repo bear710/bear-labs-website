@@ -56,6 +56,12 @@
     perspective: 1000px;
     cursor: pointer;
     position: relative;
+    transition: opacity 0.4s ease;
+}
+
+.card:hover+.card {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .cardInner {
