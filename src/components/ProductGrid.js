@@ -122,6 +122,22 @@ export default function ProductGrid() {
                     </div>
                 </div>
             </div>
+
+            {/* Ampersand Section */}
+            <div className={styles.category}>
+                <h3 className={styles.categoryHeading}>Ampersand: A Premium Edible Concentrate</h3>
+                <div className={styles.wideCard} style={{ '--accent-color': 'var(--color-yellow)' }}>
+                    <div className={styles.cardInner}>
+                        <div className={styles.cardFront}>
+                            <h4 className={styles.productName}>Ampersand Edible Concentrate</h4>
+                            <span className={styles.productSubtitle}>Premium Cannabis-Infused Concentrate</span>
+                        </div>
+                        <div className={styles.cardBack}>
+                            <p className={styles.description}>Ampersand is a premium edible concentrate designed for versatility and precise dosing. [Description coming soon]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     );
 }
