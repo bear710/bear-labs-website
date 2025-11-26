@@ -45,10 +45,3 @@
     transform: translateY(-5px);
     box-shadow: 0 15px 40px rgba(129, 203, 210, 0.5);
 }
-
-#wm-retailers-embed {
-    width: 100%;
-    min-height: 600px;
-}
-
-```
