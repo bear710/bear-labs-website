@@ -52,7 +52,7 @@ const liveResinProducts = [
         subtitle: "Craft Resin With A Punch",
         description: "Tier 2 brings serious quality at a more accessible price. These live or cured resin batches often punch above their tier, delivering nearly Tier 1 flavor and effects thanks to high-yielding cultivars. The sauce might be a little less runny, or the diamonds a little smaller—but the dab still hits hard. Premium vibes without the premium price.",
         color: "var(--color-turquoise)",
-        image: "/images/products/resin-jar-placeholder.png"
+        image: "/images/products/tier2-live-resin.jpg"
     },
     {
         id: 3,
