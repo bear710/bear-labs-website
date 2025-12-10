@@ -44,7 +44,7 @@ const liveResinProducts = [
         subtitle: "Premium Spectrum Sauce",
         description: "This is the top-tier resin experience—whether it's live or cured. We're talking clean, flavorful diamonds drenched in terp-loaded sauce, extracted from rare, farm-direct genetics. Whether it starts as fresh frozen or expertly cured flower, the outcome is the same: loud aroma, vibrant color, and smooth potency. This is the resin that sets the bar at Bear Labs.",
         color: "var(--color-yellow)",
-        image: "/images/products/resin-jar-placeholder.png"
+        image: "/images/products/tier1-live-resin.jpg"
     },
     {
         id: 2,
