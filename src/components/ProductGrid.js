@@ -68,7 +68,7 @@ const liveResinProducts = [
         subtitle: "Budget Banger",
         description: "Don't sleep on Tier 4. This is the most wallet-friendly option in the Bear lineup, but it still brings the fire. You'll find full-spectrum resin that might run a little darker or come from older harvests, but it still delivers on flavor and effect. Whether it's live or cured, it's the best bang for your buck—perfect for stretching the stash without compromising on quality.",
         color: "var(--color-dark-turquoise)",
-        image: "/images/products/resin-jar-placeholder.png"
+        image: "/images/products/tier4-live-resin.jpg"
     }
 ];
 
