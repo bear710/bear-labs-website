@@ -60,7 +60,7 @@ const liveResinProducts = [
         subtitle: "Everyday Essential",
         description: "This is the people's resin. Crafted from widely available strains, Tier 3 live and cured resin brings you solid flavor, dependable potency, and a price that makes sense for your daily dab. You might notice slight color or texture differences compared to higher tiers, but the quality remains solid and consistent. A workhorse in the best way.",
         color: "var(--color-pea-green)",
-        image: "/images/products/resin-jar-placeholder.png"
+        image: "/images/products/tier3-live-resin.png"
     },
     {
         id: 4,
