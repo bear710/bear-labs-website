@@ -57,9 +57,11 @@ function DesktopShowcase() {
         const initGSAP = async () => {
             const gsapModule = await import('gsap');
             const scrollTriggerModule = await import('gsap/ScrollTrigger');
+            const scrollToModule = await import('gsap/ScrollToPlugin');
             const gsap = gsapModule.default || gsapModule;
             const ScrollTrigger = scrollTriggerModule.ScrollTrigger || scrollTriggerModule.default;
-            gsap.registerPlugin(ScrollTrigger);
+            const ScrollToPlugin = scrollToModule.ScrollToPlugin || scrollToModule.default;
+            gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
             ctx = gsap.context(() => {
                 ScrollTrigger.create({
@@ -82,6 +84,27 @@ function DesktopShowcase() {
         initGSAP();
         return () => ctx && ctx.revert();
     }, []);
+
+    const scrollToIndex = async (index) => {
+        const gsapModule = await import('gsap');
+        const scrollToModule = await import('gsap/ScrollToPlugin');
+        const gsap = gsapModule.default || gsapModule;
+        const ScrollToPlugin = scrollToModule.ScrollToPlugin || scrollToModule.default;
+        gsap.registerPlugin(ScrollToPlugin);
+
+        if (sectionRef.current) {
+            const section = sectionRef.current;
+            const start = section.offsetTop;
+            const scrollRange = section.offsetHeight - window.innerHeight;
+            const targetScroll = start + (index / (PRODUCTS.length - 1)) * scrollRange;
+
+            gsap.to(window, {
+                scrollTo: { y: targetScroll, autoKill: false },
+                duration: 1.2,
+                ease: 'power3.inOut'
+            });
+        }
+    };
 
     const product = PRODUCTS[activeIndex];
 
@@ -129,6 +152,7 @@ function DesktopShowcase() {
                             key={i}
                             className={`${styles.dot} ${i === activeIndex ? styles.activeDot : ''}`}
                             aria-label={`View ${PRODUCTS[i].name}`}
+                            onClick={() => scrollToIndex(i)}
                         />
                     ))}
                 </div>
