@@ -1,7 +1,7 @@
 import styles from './page.module.css';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
-import ProductGrid from '../components/ProductGrid';
+import ProductShowcase from '../components/ProductShowcase';
 import StoreLocator from '../components/StoreLocator';
 import Merch from '../components/Merch';
 import About from '../components/About';
@@ -13,7 +13,7 @@ export default function Home() {
     <main className={styles.main}>
       <Header />
       <Hero />
-      <ProductGrid />
+      <ProductShowcase />
       <StoreLocator />
       <Merch />
       <About />
