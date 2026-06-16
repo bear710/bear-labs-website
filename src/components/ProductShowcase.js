@@ -107,6 +107,7 @@ function LoadingSpinner() {
 /* ── Desktop: pinned scroll layout ── */
 function DesktopShowcase() {
     const sectionRef = useRef(null);
+    const stickyRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [rosinTier, setRosinTier] = useState(1);
     const [resinTier, setResinTier] = useState(1);
@@ -127,6 +128,8 @@ function DesktopShowcase() {
                     trigger: sectionRef.current,
                     start: 'top top',
                     end: 'bottom bottom',
+                    pin: stickyRef.current,
+                    pinSpacing: false,
                     scrub: true,
                     onUpdate: (self) => {
                         const progress = self.progress;
@@ -184,7 +187,7 @@ function DesktopShowcase() {
             id="products"
             className={`${styles.section} ${styles.sectionDesktop}`}
         >
-            <div className={styles.stickyContainer}>
+            <div ref={stickyRef} className={styles.stickyContainer}>
                 <h2 className={styles.mainHeading}>OUR COLLECTION</h2>
 
                 {/* Left: Interactive Image Panel */}
