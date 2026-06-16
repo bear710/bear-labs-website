@@ -1,42 +1,99 @@
 'use client';
-import { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './ProductShowcase.module.css';
-
-const ProductScene = lazy(() => import('./ProductScene'));
 
 const PRODUCTS = [
     {
         label: 'Live Rosin',
         name: 'Live Rosin',
-        subtitle: 'The Apex of Solventless',
-        description:
-            'Our 90u-120u live rosin is crafted from ultra-exclusive, pheno-hunted, farm-specific genetics. Available in 4 tiers — from the supreme Tier 1 drop to the everyday Tier 4 sleeper hit — every jar delivers striking color, insane terp profiles, and an unmatched flavor experience.',
-        accentColor: 'var(--color-yellow)',
+        hasTiers: true,
+        tiers: [
+            {
+                tier: 1,
+                subtitle: 'The Apex of Excellence',
+                description: 'This is the supreme drop. Our 90u-120u live rosin is crafted from ultra-exclusive, pheno-hunted, farm-specific genetics. Expect striking color, insane terp profiles, and an unmatched flavor experience. If you know, you know - this is the peak of solventless perfection.',
+                image: '/images/products/tier1-live-rosin.jpg',
+                accentColor: 'var(--color-yellow)'
+            },
+            {
+                tier: 2,
+                subtitle: 'Top-Shelf Without the Top Price',
+                description: 'Sometimes, the best batches just hit different. When our Tier 1 strains yield exceptionally well, we pass the savings on to you. Same high-caliber 90u-120u live rosin, same premium experience—just at a friendlier price.',
+                image: '/images/products/tier2-live-rosin.jpg',
+                accentColor: 'var(--color-turquoise)'
+            },
+            {
+                tier: 3,
+                subtitle: 'Fire for the People',
+                description: 'The perfect balance between craft and value. This 90u-120u live rosin comes from high-yielding, widely cultivated strains that still bring elite flavor, aroma, and potency. It may not be as rare as Tier 1, but trust—it still slaps.',
+                image: '/images/products/tier3-live-rosin.jpg',
+                accentColor: 'var(--color-pea-green)'
+            },
+            {
+                tier: 4,
+                subtitle: 'The Sleeper Hit',
+                description: "Bear Labs doesn't do 'low quality,' and this tier proves it. Pressed from 90u-160u, this is the most affordable way to experience true solventless excellence. It may have a slightly darker hue or a more mellow terp profile, but it still delivers a premium dab at a price that won't break the bank.",
+                image: '/images/products/tier4-live-rosin.jpg',
+                accentColor: 'var(--color-dark-turquoise)'
+            }
+        ]
     },
     {
         label: 'Live Resin',
         name: 'Live Resin',
-        subtitle: 'Premium Spectrum Sauce',
-        description:
-            'Clean, flavorful diamonds drenched in terp-loaded sauce, extracted from rare, farm-direct genetics. Whether it starts as fresh frozen or expertly cured flower, the outcome is the same: loud aroma, vibrant color, and smooth potency across all four tiers.',
-        accentColor: 'var(--color-turquoise)',
+        hasTiers: true,
+        tiers: [
+            {
+                tier: 1,
+                subtitle: 'Premium Spectrum Sauce',
+                description: "This is the top-tier resin experience—whether it's live or cured. We're talking clean, flavorful diamonds drenched in terp-loaded sauce, extracted from rare, farm-direct genetics. Whether it starts as fresh frozen or expertly cured flower, the outcome is the same: loud aroma, vibrant color, and smooth potency.",
+                image: '/images/products/tier1-live-resin.jpg',
+                accentColor: 'var(--color-yellow)'
+            },
+            {
+                tier: 2,
+                subtitle: 'Craft Resin With A Punch',
+                description: 'Tier 2 brings serious quality at a more accessible price. These live or cured resin batches often punch above their tier, delivering nearly Tier 1 flavor and effects thanks to high-yielding cultivars. The sauce might be a little less runny, or the diamonds a little smaller.',
+                image: '/images/products/tier2-live-resin.jpg',
+                accentColor: 'var(--color-turquoise)'
+            },
+            {
+                tier: 3,
+                subtitle: 'Everyday Essential',
+                description: 'This is the people\'s resin. Crafted from widely available strains, Tier 3 live and cured resin brings you solid flavor, dependable potency, and a price that makes sense for your daily dab. You might notice slight color or texture differences.',
+                image: '/images/products/tier3-live-resin.png',
+                accentColor: 'var(--color-pea-green)'
+            },
+            {
+                tier: 4,
+                subtitle: 'Budget Banger',
+                description: "Don't sleep on Tier 4. This is the most wallet-friendly option in the Bear lineup, but it still brings the fire. You'll find full-spectrum resin that might run a little darker or come from older harvests, but it still delivers on flavor and effect.",
+                image: '/images/products/tier4-live-resin.jpg',
+                accentColor: 'var(--color-dark-turquoise)'
+            }
+        ]
     },
     {
         label: '510 Vapes',
         name: 'Live Resin 510 Vapes',
         subtitle: 'Premium Live Resin Cartridges',
-        description:
-            '100% live resin, distillate-free, delivered through medical-grade ceramic hardware. Every pull tastes like cracking open a jar of top-shelf nugs — retaining 2-3x more terpenes for true-to-strain flavor and a full entourage effect.',
+        description: '100% live resin, distillate-free, delivered through medical-grade ceramic hardware. Every pull tastes like cracking open a jar of top-shelf nugs — retaining 2-3x more terpenes for true-to-strain flavor and a full entourage effect.',
         accentColor: 'var(--color-turquoise)',
+        isVape: true,
+        images: [
+            '/images/products/vape-1.jpg',
+            '/images/products/vape-2.jpg',
+            '/images/products/vape-3.jpg'
+        ]
     },
     {
         label: 'Edibles',
         name: 'Ampersand',
         subtitle: 'The Smokeless Dab',
-        description:
-            'A zero-calorie, zero-sugar edible live rosin concentrate that melts on your tongue. Absorbs through your mouth for a fast, predictable lift that feels closer to a dab than a traditional edible. Vegan, gluten-free, and discreet.',
+        description: 'A zero-calorie, zero-sugar edible live rosin concentrate that melts on your tongue. Absorbs through your mouth for a fast, predictable lift that feels closer to a dab than a traditional edible. Vegan, gluten-free, and discreet.',
         accentColor: 'var(--color-yellow)',
-    },
+        image: '/images/products/ampersand.png'
+    }
 ];
 
 function LoadingSpinner() {
@@ -51,6 +108,8 @@ function LoadingSpinner() {
 function DesktopShowcase() {
     const sectionRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [rosinTier, setRosinTier] = useState(1);
+    const [resinTier, setResinTier] = useState(1);
 
     useEffect(() => {
         let ctx;
@@ -107,6 +166,17 @@ function DesktopShowcase() {
     };
 
     const product = PRODUCTS[activeIndex];
+    const getTierIndex = (idx) => {
+        if (idx === 0) return rosinTier - 1;
+        if (idx === 1) return resinTier - 1;
+        return 0;
+    };
+
+    const activeTierData = product.hasTiers ? product.tiers[getTierIndex(activeIndex)] : null;
+    const name = activeTierData ? `${product.name} - Tier ${activeTierData.tier}` : product.name;
+    const subtitle = activeTierData ? activeTierData.subtitle : product.subtitle;
+    const description = activeTierData ? activeTierData.description : product.description;
+    const accentColor = activeTierData ? activeTierData.accentColor : product.accentColor;
 
     return (
         <section
@@ -117,11 +187,57 @@ function DesktopShowcase() {
             <div className={styles.stickyContainer}>
                 <h2 className={styles.mainHeading}>OUR COLLECTION</h2>
 
-                {/* Left: 3D Canvas */}
-                <div className={styles.canvasWrap}>
-                    <Suspense fallback={<LoadingSpinner />}>
-                        <ProductScene activeIndex={activeIndex} />
-                    </Suspense>
+                {/* Left: Interactive Image Panel */}
+                <div className={styles.visualPanel}>
+                    {PRODUCTS.map((prod, index) => {
+                        const isCurrent = index === activeIndex;
+                        const activeGlow = prod.hasTiers 
+                            ? prod.tiers[getTierIndex(index)].accentColor 
+                            : (prod.accentColor || 'var(--color-yellow)');
+
+                        return (
+                            <div
+                                key={index}
+                                className={`${styles.productVisual} ${isCurrent ? styles.activeVisual : ''}`}
+                                style={{ '--accent-glow': activeGlow }}
+                            >
+                                {/* Glow Backdrop */}
+                                <div className={styles.glowBackdrop} />
+
+                                {/* Images */}
+                                {prod.hasTiers ? (
+                                    prod.tiers.map((t, tIdx) => {
+                                        const isTierActive = getTierIndex(index) === tIdx;
+                                        return (
+                                            <img
+                                                key={tIdx}
+                                                src={t.image}
+                                                alt={`${prod.name} - Tier ${t.tier}`}
+                                                className={`${styles.productImage} ${isTierActive && isCurrent ? styles.activeImage : ''}`}
+                                            />
+                                        );
+                                    })
+                                ) : prod.isVape ? (
+                                    <div className={styles.vapeImageContainer}>
+                                        {prod.images.map((imgUrl, imgIdx) => (
+                                            <div
+                                                key={imgIdx}
+                                                className={`${styles.vapeCard} ${styles[`vapeCard${imgIdx + 1}`]} ${isCurrent ? styles.animateVape : ''}`}
+                                            >
+                                                <img src={imgUrl} alt={`${prod.name} ${imgIdx + 1}`} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <img
+                                        src={prod.image}
+                                        alt={prod.name}
+                                        className={`${styles.productImage} ${isCurrent ? styles.activeImage : ''}`}
+                                    />
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
 
                 {/* Right: Text Panel */}
@@ -132,13 +248,39 @@ function DesktopShowcase() {
                     >
                         <p
                             className={styles.productLabel}
-                            style={{ color: product.accentColor }}
+                            style={{ color: accentColor }}
                         >
                             {product.label}
                         </p>
-                        <h3 className={styles.productName}>{product.name}</h3>
-                        <p className={styles.productSubtitle}>{product.subtitle}</p>
-                        <p className={styles.productDescription}>{product.description}</p>
+                        <h3 className={styles.productName}>{name}</h3>
+                        <p className={styles.productSubtitle}>{subtitle}</p>
+                        
+                        {/* Interactive Tier Selector */}
+                        {product.hasTiers && (
+                            <div className={styles.tierSelector}>
+                                <span className={styles.tierSelectorLabel}>Select Tier</span>
+                                <div className={styles.tierButtons}>
+                                    {product.tiers.map((t) => {
+                                        const isActive = (activeIndex === 0 ? rosinTier : resinTier) === t.tier;
+                                        return (
+                                            <button
+                                                key={t.tier}
+                                                className={`${styles.tierBtn} ${isActive ? styles.activeTierBtn : ''}`}
+                                                style={{ '--tier-accent': t.accentColor }}
+                                                onClick={() => {
+                                                    if (activeIndex === 0) setRosinTier(t.tier);
+                                                    if (activeIndex === 1) setResinTier(t.tier);
+                                                }}
+                                            >
+                                                Tier {t.tier}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        <p className={styles.productDescription}>{description}</p>
                         <a href="#store-locator" className={styles.ctaButton}>
                             Find Near You
                         </a>
@@ -163,26 +305,93 @@ function DesktopShowcase() {
 
 /* ── Mobile: stacked layout ── */
 function MobileShowcase() {
+    const [rosinTier, setRosinTier] = useState(1);
+    const [resinTier, setResinTier] = useState(1);
+
     return (
         <section id="products" className={`${styles.section} ${styles.mobileSection}`}>
             <h2 className={styles.mobileHeading}>OUR COLLECTION</h2>
-            {PRODUCTS.map((product, i) => (
-                <div key={i} className={styles.mobileCard}>
-                    <div className={styles.mobileCanvasWrap}>
-                        <Suspense fallback={<LoadingSpinner />}>
-                            <ProductScene activeIndex={i} />
-                        </Suspense>
+            {PRODUCTS.map((prod, i) => {
+                const isRosin = i === 0;
+                const isResin = i === 1;
+                const isVape = i === 2;
+
+                const activeTier = isRosin ? rosinTier : isResin ? resinTier : 1;
+                const tierData = prod.hasTiers ? prod.tiers[activeTier - 1] : null;
+
+                const name = tierData ? `${prod.name} - Tier ${tierData.tier}` : prod.name;
+                const subtitle = tierData ? tierData.subtitle : prod.subtitle;
+                const description = tierData ? tierData.description : prod.description;
+                const accentColor = tierData ? tierData.accentColor : prod.accentColor;
+                const imageSrc = tierData ? tierData.image : prod.image;
+
+                return (
+                    <div key={i} className={styles.mobileCard}>
+                        {/* Mobile Visual Wrap */}
+                        <div className={styles.mobileVisualWrap}>
+                            <div className={styles.glowBackdrop} style={{ '--accent-glow': accentColor || 'var(--color-yellow)' }} />
+
+                            {prod.hasTiers ? (
+                                <img
+                                    src={imageSrc}
+                                    alt={name}
+                                    className={styles.mobileProductImage}
+                                />
+                            ) : isVape ? (
+                                <div className={styles.mobileVapeImageContainer}>
+                                    {prod.images.map((imgUrl, imgIdx) => (
+                                        <div key={imgIdx} className={styles.mobileVapeCard}>
+                                            <img src={imgUrl} alt={`${prod.name} ${imgIdx + 1}`} />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <img
+                                    src={prod.image}
+                                    alt={prod.name}
+                                    className={styles.mobileProductImage}
+                                />
+                            )}
+                        </div>
+
+                        {/* Mobile Text Panel */}
+                        <div className={styles.mobileTextContent}>
+                            <p className={styles.productLabel} style={{ color: accentColor }}>
+                                {prod.label}
+                            </p>
+                            <h3 className={styles.mobileProductName}>{name}</h3>
+                            <p className={styles.mobileProductSubtitle}>{subtitle}</p>
+
+                            {/* Mobile Tier Selector */}
+                            {prod.hasTiers && (
+                                <div className={styles.mobileTierSelector}>
+                                    {prod.tiers.map((t) => {
+                                        const isActive = activeTier === t.tier;
+                                        return (
+                                            <button
+                                                key={t.tier}
+                                                className={`${styles.tierBtn} ${isActive ? styles.activeTierBtn : ''}`}
+                                                style={{ '--tier-accent': t.accentColor }}
+                                                onClick={() => {
+                                                    if (isRosin) setRosinTier(t.tier);
+                                                    if (isResin) setResinTier(t.tier);
+                                                }}
+                                            >
+                                                Tier {t.tier}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
+
+                            <p className={styles.mobileProductDescription}>{description}</p>
+                            <a href="#store-locator" className={styles.ctaButton}>
+                                Find Near You
+                            </a>
+                        </div>
                     </div>
-                    <div className={styles.mobileTextContent}>
-                        <h3 className={styles.mobileProductName}>{product.name}</h3>
-                        <p className={styles.mobileProductSubtitle}>{product.subtitle}</p>
-                        <p className={styles.mobileProductDescription}>{product.description}</p>
-                        <a href="#store-locator" className={styles.ctaButton}>
-                            Find Near You
-                        </a>
-                    </div>
-                </div>
-            ))}
+                );
+            })}
         </section>
     );
 }
