@@ -471,6 +471,30 @@
     margin-bottom: 1.5rem;
 }
 
+/* ── Interactive 3D jar preview (Phase 1 prototype) ── */
+.jarPreviewSection {
+    padding: 5rem 6% 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.jarPreviewHeading {
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.jarPreviewSubheading {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
     .productName {

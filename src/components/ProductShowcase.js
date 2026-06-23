@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import styles from './ProductShowcase.module.css';
+import Product3DViewer from './three/Product3DViewer';
 
 const PRODUCTS = [
     {
@@ -421,5 +422,16 @@ export default function ProductShowcase() {
         );
     }
 
-    return isMobile ? <MobileShowcase /> : <DesktopShowcase />;
+    return (
+        <>
+            {isMobile ? <MobileShowcase /> : <DesktopShowcase />}
+            <section className={styles.jarPreviewSection}>
+                <h2 className={styles.jarPreviewHeading}>INTERACTIVE PREVIEW</h2>
+                <p className={styles.jarPreviewSubheading}>
+                    Prototype — drag to rotate, then open the lid to look inside.
+                </p>
+                <Product3DViewer />
+            </section>
+        </>
+    );
 }
