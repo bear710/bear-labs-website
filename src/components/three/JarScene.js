@@ -1,23 +1,25 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { ContactShadows } from '@react-three/drei';
 import gsap from 'gsap';
-import LightingRig from './LightingRig';
-import CameraController from './CameraController';
 import PlaceholderJar, { JAR_DIMENSIONS } from './PlaceholderJar';
+import { resolveJarVariant } from './productConfig';
 import { VIEWER_STATES } from './useViewerState';
 
 const FULL_TURNS = 3;
 
 /**
- * Orchestrates the lid open/close GSAP timeline and owns the raycast
- * handlers for the lid + product surface. Camera motion lives entirely
- * in CameraController so the two concerns never tangle.
+ * Lid open/close timeline + lid/product raycast handlers. Lighting,
+ * camera, and ground shadow are shared (see ViewerCanvas) — this
+ * component only owns jar geometry and its own interaction.
+ *
+ * Conforms to the showroom's scene contract:
+ *   { product, interactionState, interactionGo, transitionReady }
  */
-export default function JarScene({ state, go, reducedMotion, controlsRef }) {
+export default function JarScene({ product, interactionState, interactionGo, transitionReady, reducedMotion }) {
     const lidRef = useRef(null);
     const productRef = useRef(null);
     const tweenRef = useRef(null);
+    const variant = resolveJarVariant(product);
 
     useEffect(() => {
         const lid = lidRef.current;
@@ -28,14 +30,14 @@ export default function JarScene({ state, go, reducedMotion, controlsRef }) {
             tweenRef.current = null;
         }
 
-        if (state === VIEWER_STATES.OPENING) {
+        if (interactionState === VIEWER_STATES.OPENING) {
             if (reducedMotion) {
                 lid.rotation.y = Math.PI * 2 * FULL_TURNS;
                 lid.position.set(JAR_DIMENSIONS.lidOpenX, JAR_DIMENSIONS.lidOpenY, JAR_DIMENSIONS.lidOpenZ);
-                go(VIEWER_STATES.OPEN);
+                interactionGo(VIEWER_STATES.OPEN);
                 return undefined;
             }
-            const tl = gsap.timeline({ onComplete: () => go(VIEWER_STATES.OPEN) });
+            const tl = gsap.timeline({ onComplete: () => interactionGo(VIEWER_STATES.OPEN) });
             tl.to(lid.rotation, { y: Math.PI * 2 * FULL_TURNS, duration: 1.1, ease: 'power1.in' });
             tl.to(
                 lid.position,
@@ -49,14 +51,14 @@ export default function JarScene({ state, go, reducedMotion, controlsRef }) {
                 0.35
             );
             tweenRef.current = tl;
-        } else if (state === VIEWER_STATES.CLOSING) {
+        } else if (interactionState === VIEWER_STATES.CLOSING) {
             if (reducedMotion) {
                 lid.rotation.y = 0;
                 lid.position.set(0, JAR_DIMENSIONS.lidClosedY, 0);
-                go(VIEWER_STATES.IDLE);
+                interactionGo(VIEWER_STATES.IDLE);
                 return undefined;
             }
-            const tl = gsap.timeline({ onComplete: () => go(VIEWER_STATES.IDLE) });
+            const tl = gsap.timeline({ onComplete: () => interactionGo(VIEWER_STATES.IDLE) });
             tl.to(lid.position, { y: JAR_DIMENSIONS.lidClosedY, x: 0, z: 0, duration: 0.9, ease: 'power2.inOut' });
             tl.to(lid.rotation, { y: 0, duration: 0.9, ease: 'power1.out' }, 0.1);
             tweenRef.current = tl;
@@ -65,31 +67,33 @@ export default function JarScene({ state, go, reducedMotion, controlsRef }) {
         return () => {
             if (tweenRef.current) tweenRef.current.kill();
         };
-    }, [state, reducedMotion, go]);
+    }, [interactionState, reducedMotion, interactionGo]);
 
     const handleLidPointerDown = (e) => {
         e.stopPropagation();
-        if (state === VIEWER_STATES.IDLE || state === VIEWER_STATES.INSPECTING) {
-            go(VIEWER_STATES.OPENING);
+        if (!transitionReady) return;
+        if (interactionState === VIEWER_STATES.IDLE || interactionState === VIEWER_STATES.INSPECTING) {
+            interactionGo(VIEWER_STATES.OPENING);
         }
     };
 
     const handleProductPointerDown = (e) => {
         e.stopPropagation();
-        if (state === VIEWER_STATES.OPEN) {
-            go(VIEWER_STATES.PRODUCT_FOCUS);
-        } else if (state === VIEWER_STATES.PRODUCT_FOCUS) {
-            go(VIEWER_STATES.OPEN);
+        if (!transitionReady) return;
+        if (interactionState === VIEWER_STATES.OPEN) {
+            interactionGo(VIEWER_STATES.PRODUCT_FOCUS);
+        } else if (interactionState === VIEWER_STATES.PRODUCT_FOCUS) {
+            interactionGo(VIEWER_STATES.OPEN);
         }
     };
 
-    const lidInteractive = state === VIEWER_STATES.IDLE || state === VIEWER_STATES.INSPECTING;
-    const productInteractive = state === VIEWER_STATES.OPEN || state === VIEWER_STATES.PRODUCT_FOCUS;
+    const lidInteractive =
+        transitionReady && (interactionState === VIEWER_STATES.IDLE || interactionState === VIEWER_STATES.INSPECTING);
+    const productInteractive =
+        transitionReady && (interactionState === VIEWER_STATES.OPEN || interactionState === VIEWER_STATES.PRODUCT_FOCUS);
 
     return (
-        <>
-            <color attach="background" args={['#070707']} />
-            <LightingRig />
+        <group scale={variant.scale}>
             <PlaceholderJar
                 lidGroupRef={lidRef}
                 productRef={productRef}
@@ -97,17 +101,8 @@ export default function JarScene({ state, go, reducedMotion, controlsRef }) {
                 onProductPointerDown={handleProductPointerDown}
                 lidInteractive={lidInteractive}
                 productInteractive={productInteractive}
+                variant={variant}
             />
-            <ContactShadows
-                position={[0, JAR_DIMENSIONS.bottomY - 0.05, 0]}
-                opacity={0.55}
-                scale={6}
-                blur={2.4}
-                far={2}
-                resolution={256}
-                color="#000000"
-            />
-            <CameraController state={state} reducedMotion={reducedMotion} controlsRef={controlsRef} go={go} />
-        </>
+        </group>
     );
 }

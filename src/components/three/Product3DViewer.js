@@ -1,23 +1,24 @@
 'use client';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useViewerState, VIEWER_STATES } from './useViewerState';
+import { SHOWROOM_STATES } from './useShowroomTransition';
 import InteractionHint from './InteractionHint';
 import styles from './Product3DViewer.module.css';
 
 /**
  * FUTURE MODEL SUPPORT
- * PlaceholderJar currently builds the jar from procedural geometry.
- * To swap in a real model later, replace PlaceholderJar's contents with
- * a drei <primitive object={gltf.scene} /> (via useGLTF), as long as the
- * GLB contains nodes named exactly:
- *   - JarBody          (the glass body)
- *   - Lid               (the separately-animatable lid, same local origin
- *                         used here: closed at y≈0.975, open at y≈2.25)
- *   - ProductSurface    (raycastable mesh for the product-focus interaction)
- *   - Label             (the label band)
- * JarScene, CameraController, and the click handlers only depend on the
- * lid/product refs and those names — no other code needs to change.
+ * Placeholder scenes (PlaceholderJar, VapeScene, AmpersandScene) build
+ * from procedural geometry. To swap in a real GLB later, point a
+ * product's modelPath at the asset and have its scene component load it
+ * via drei's useGLTF, as long as the GLB's nodes are named to match what
+ * each scene currently expects:
+ *   jar            -> JarBody, Lid, ProductSurface, Label
+ *   vapePackage    -> PackageBody, PackageTop, VapeBody, Mouthpiece, LabelFront, LabelBack
+ *   ampersandPackage -> ContainerBody, Lid, LabelFront, LabelBack, ProductInterior
+ * ProductStage, CameraController, and the showroom selector only depend
+ * on productConfig fields and the modelRegistry — no other code needs
+ * to change when a GLB is introduced.
  */
 
 const ViewerCanvas = dynamic(() => import('./ViewerCanvas'), {
@@ -25,44 +26,41 @@ const ViewerCanvas = dynamic(() => import('./ViewerCanvas'), {
     loading: () => null,
 });
 
-function detectWebGL() {
-    try {
-        const canvas = document.createElement('canvas');
-        return !!(
-            window.WebGLRenderingContext &&
-            (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
-        );
-    } catch {
-        return false;
-    }
-}
+const OPEN_LABELS = {
+    open: 'Open Jar',
+    extract: 'Extract Vape',
+    reveal: 'Reveal Product',
+};
 
-export default function Product3DViewer() {
+const RESET_LABELS = {
+    open: 'Reset the jar to its closed state',
+    extract: 'Reset the vape back into its package',
+    reveal: 'Reset the package to its closed state',
+};
+
+/**
+ * One product's stage + its own Open/Reset controls. Rendered keyed by
+ * product id from ProductShowroom — switching products remounts this,
+ * which is what resets useViewerState back to idle with no manual
+ * cleanup required.
+ */
+export default function Product3DViewer({
+    product,
+    transition,
+    onExited,
+    onEntered,
+    mounted,
+    webglSupported,
+    reducedMotion,
+    isMobile,
+    dpr,
+}) {
     const { state, go } = useViewerState();
-    const [mounted, setMounted] = useState(false);
-    const [webglSupported, setWebglSupported] = useState(true);
-    const [reducedMotion, setReducedMotion] = useState(false);
     const controlsRef = useRef(null);
 
-    useEffect(() => {
-        setMounted(true);
-        setWebglSupported(detectWebGL());
-
-        const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-        setReducedMotion(mq.matches);
-        const handler = (e) => setReducedMotion(e.matches);
-        mq.addEventListener('change', handler);
-        return () => mq.removeEventListener('change', handler);
-    }, []);
-
-    const dpr = useMemo(() => {
-        if (typeof window === 'undefined') return [1, 1];
-        return [1, Math.min(window.devicePixelRatio || 1, 2)];
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mounted]);
-
-    const canOpen = state === VIEWER_STATES.IDLE || state === VIEWER_STATES.INSPECTING;
-    const canReset = state === VIEWER_STATES.OPEN || state === VIEWER_STATES.PRODUCT_FOCUS;
+    const transitionReady = transition === SHOWROOM_STATES.READY || transition === SHOWROOM_STATES.IDLE;
+    const canOpen = transitionReady && (state === VIEWER_STATES.IDLE || state === VIEWER_STATES.INSPECTING);
+    const canReset = transitionReady && (state === VIEWER_STATES.OPEN || state === VIEWER_STATES.PRODUCT_FOCUS);
 
     const handleOpen = () => {
         if (canOpen) go(VIEWER_STATES.OPENING);
@@ -72,12 +70,15 @@ export default function Product3DViewer() {
         if (canReset) go(VIEWER_STATES.CLOSING);
     };
 
+    const openLabel = OPEN_LABELS[product.interactionType] || OPEN_LABELS.open;
+    const resetLabel = RESET_LABELS[product.interactionType] || RESET_LABELS.open;
+
     return (
         <div className={styles.viewer}>
             <div
                 className={styles.canvasWrap}
                 role="img"
-                aria-label="Interactive 3D preview of a Bear Labs concentrate jar. Drag to rotate, or use the Open and Reset buttons below."
+                aria-label={`Interactive 3D preview of ${product.name}. Drag to rotate, or use the controls below.`}
             >
                 {!mounted && (
                     <div className={styles.loadingFallback}>
@@ -93,15 +94,20 @@ export default function Product3DViewer() {
 
                 {mounted && webglSupported && (
                     <ViewerCanvas
-                        state={state}
-                        go={go}
+                        product={product}
+                        transition={transition}
+                        onExited={onExited}
+                        onEntered={onEntered}
+                        interactionState={state}
+                        interactionGo={go}
                         reducedMotion={reducedMotion}
+                        isMobile={isMobile}
                         controlsRef={controlsRef}
                         dpr={dpr}
                     />
                 )}
 
-                {mounted && webglSupported && <InteractionHint state={state} />}
+                {mounted && webglSupported && <InteractionHint state={state} product={product} />}
             </div>
 
             <div className={styles.controls}>
@@ -110,16 +116,16 @@ export default function Product3DViewer() {
                     className={styles.controlBtn}
                     onClick={handleOpen}
                     disabled={!mounted || !webglSupported || !canOpen}
-                    aria-label="Open the jar lid"
+                    aria-label={openLabel}
                 >
-                    Open Jar
+                    {openLabel}
                 </button>
                 <button
                     type="button"
                     className={styles.controlBtn}
                     onClick={handleReset}
                     disabled={!mounted || !webglSupported || !canReset}
-                    aria-label="Reset the jar to its closed state"
+                    aria-label={resetLabel}
                 >
                     Reset
                 </button>

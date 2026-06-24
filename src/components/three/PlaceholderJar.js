@@ -1,5 +1,5 @@
 'use client';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 
 /**
@@ -24,6 +24,15 @@ export const JAR_DIMENSIONS = {
     productY: 0.45,
 };
 
+const DEFAULT_VARIANT = {
+    glassColor: '#1a1d1f',
+    labelColor: '#2a2d30',
+    lidColor: '#0d0f10',
+    lidMetalness: 0.55,
+    productColor: '#b5751f',
+    accent: null,
+};
+
 export default function PlaceholderJar({
     lidGroupRef,
     productRef,
@@ -31,11 +40,12 @@ export default function PlaceholderJar({
     onProductPointerDown,
     lidInteractive = true,
     productInteractive = false,
+    variant = DEFAULT_VARIANT,
 }) {
     const glassMaterial = useMemo(
         () =>
             new THREE.MeshPhysicalMaterial({
-                color: '#1a1d1f',
+                color: variant.glassColor,
                 transparent: true,
                 opacity: 0.55,
                 roughness: 0.12,
@@ -44,7 +54,7 @@ export default function PlaceholderJar({
                 clearcoatRoughness: 0.15,
                 side: THREE.DoubleSide,
             }),
-        []
+        [variant.glassColor]
     );
 
     const baseMaterial = useMemo(
@@ -55,32 +65,58 @@ export default function PlaceholderJar({
     const labelMaterial = useMemo(
         () =>
             new THREE.MeshStandardMaterial({
-                color: '#2a2d30',
+                color: variant.labelColor,
                 roughness: 0.55,
                 metalness: 0.1,
                 transparent: true,
                 opacity: 0.92,
                 side: THREE.DoubleSide,
             }),
-        []
+        [variant.labelColor]
+    );
+
+    const labelAccentMaterial = useMemo(
+        () =>
+            new THREE.MeshStandardMaterial({
+                color: variant.accent || variant.labelColor,
+                roughness: 0.4,
+                metalness: 0.15,
+            }),
+        [variant.accent, variant.labelColor]
     );
 
     const lidMaterial = useMemo(
-        () => new THREE.MeshStandardMaterial({ color: '#0d0f10', roughness: 0.35, metalness: 0.55 }),
-        []
+        () =>
+            new THREE.MeshStandardMaterial({
+                color: variant.lidColor,
+                roughness: 0.35,
+                metalness: variant.lidMetalness,
+            }),
+        [variant.lidColor, variant.lidMetalness]
     );
 
     const productMaterial = useMemo(
         () =>
             new THREE.MeshPhysicalMaterial({
-                color: '#b5751f',
+                color: variant.productColor,
                 roughness: 0.3,
                 metalness: 0,
                 clearcoat: 0.6,
                 clearcoatRoughness: 0.25,
             }),
-        []
+        [variant.productColor]
     );
+
+    useEffect(() => {
+        return () => {
+            glassMaterial.dispose();
+            baseMaterial.dispose();
+            labelMaterial.dispose();
+            labelAccentMaterial.dispose();
+            lidMaterial.dispose();
+            productMaterial.dispose();
+        };
+    }, [glassMaterial, baseMaterial, labelMaterial, labelAccentMaterial, lidMaterial, productMaterial]);
 
     return (
         <group>
@@ -97,6 +133,10 @@ export default function PlaceholderJar({
                 {/* Label: placeholder band, swap for textured mesh later */}
                 <mesh name="Label" material={labelMaterial} position={[0, -0.1, 0]}>
                     <cylinderGeometry args={[JAR_DIMENSIONS.radius + 0.02, JAR_DIMENSIONS.radius + 0.02, 0.5, 48, 1, true]} />
+                </mesh>
+                {/* Thin accent ring — the only per-product color cue, kept restrained */}
+                <mesh material={labelAccentMaterial} position={[0, 0.16, 0]}>
+                    <cylinderGeometry args={[JAR_DIMENSIONS.radius + 0.025, JAR_DIMENSIONS.radius + 0.025, 0.03, 48, 1, true]} />
                 </mesh>
             </group>
 

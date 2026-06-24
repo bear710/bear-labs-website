@@ -5,17 +5,19 @@ import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
 import { VIEWER_STATES } from './useViewerState';
 
-export const CAMERA_VIEWS = {
+const DEFAULT_VIEWS = {
     inspecting: { position: [0, 1.05, 4.2], target: [0, 0.2, 0] },
-    topDown: { position: [0, 3.6, 2.4], target: [0, 0.5, 0.1] },
+    open: { position: [0, 3.6, 2.4], target: [0, 0.5, 0.1] },
     productFocus: { position: [0, 2.6, 0.9], target: [0, 0.45, 0] },
 };
 
 /**
- * Owns all camera motion. Mesh components never touch the camera —
- * this keeps jar geometry/animation logic decoupled from view logic.
+ * Owns all camera motion. Mesh components never touch the camera — this
+ * keeps jar/vape/ampersand geometry decoupled from view logic. `views`
+ * is built per-product by productConfig.buildCameraViews, so this
+ * component never needs to know which product is active.
  */
-export default function CameraController({ state, reducedMotion, controlsRef, go }) {
+export default function CameraController({ state, reducedMotion, controlsRef, go, views = DEFAULT_VIEWS }) {
     const { camera } = useThree();
     const tweenRef = useRef(null);
     const orbitRef = useRef(null);
@@ -35,11 +37,13 @@ export default function CameraController({ state, reducedMotion, controlsRef, go
     }, [state, go]);
 
     useEffect(() => {
-        camera.position.set(...CAMERA_VIEWS.inspecting.position);
+        camera.position.set(...views.inspecting.position);
         if (orbitRef.current) {
-            orbitRef.current.target.set(...CAMERA_VIEWS.inspecting.target);
+            orbitRef.current.target.set(...views.inspecting.target);
             orbitRef.current.update();
         }
+        // Runs once per mount (this component remounts whenever the active
+        // product changes), so the camera always resets per-product.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -50,19 +54,19 @@ export default function CameraController({ state, reducedMotion, controlsRef, go
         let view = null;
         if (state === VIEWER_STATES.OPENING) {
             controls.enabled = false;
-            view = CAMERA_VIEWS.topDown;
+            view = views.open;
         } else if (state === VIEWER_STATES.OPEN) {
             controls.enabled = true;
-            view = CAMERA_VIEWS.topDown;
+            view = views.open;
         } else if (state === VIEWER_STATES.PRODUCT_FOCUS) {
             controls.enabled = true;
-            view = CAMERA_VIEWS.productFocus;
+            view = views.productFocus;
         } else if (state === VIEWER_STATES.CLOSING) {
             controls.enabled = false;
-            view = CAMERA_VIEWS.inspecting;
+            view = views.inspecting;
         } else {
             controls.enabled = true;
-            view = CAMERA_VIEWS.inspecting;
+            view = views.inspecting;
         }
 
         if (tweenRef.current) tweenRef.current.kill();
@@ -95,7 +99,7 @@ export default function CameraController({ state, reducedMotion, controlsRef, go
         return () => {
             if (tweenRef.current) tweenRef.current.kill();
         };
-    }, [state, reducedMotion, camera]);
+    }, [state, reducedMotion, camera, views]);
 
     return (
         <OrbitControls
