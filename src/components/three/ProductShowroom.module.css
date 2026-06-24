@@ -113,14 +113,30 @@
     outline: none;
 }
 
+/* No flex-wrap here on purpose — a tab with a longer label (e.g. "Live
+   Resin 510 Vape") must stay on one line. When the row is too wide for
+   the viewport it scrolls horizontally instead of wrapping or
+   overflowing the page; the scrollbar itself is hidden cross-browser,
+   same technique as the lower product rail. Centered when it fits
+   (shrink-to-fit width + the parent .selector's align-items: center)
+   without the classic flex justify-content:center + overflow pitfall. */
 .categoryTabs {
     display: flex;
     gap: 0.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0.15rem 0.25rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.categoryTabs::-webkit-scrollbar {
+    display: none;
 }
 
 .categoryTab {
+    flex: 0 0 auto;
+    white-space: nowrap;
     padding: 0.55rem 1.3rem;
     border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, 0.14);

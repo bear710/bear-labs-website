@@ -11,7 +11,7 @@ export const CATEGORIES = [
     { id: 'pioca', label: 'Pioca', hasTiers: false },
     { id: 'rosin', label: 'Live Rosin', hasTiers: true },
     { id: 'resin', label: 'Live Resin', hasTiers: true },
-    { id: 'vape', label: 'Vape', hasTiers: false },
+    { id: 'vape', label: 'Live Resin 510 Vape', hasTiers: false },
     { id: 'ampersand', label: 'Ampersand', hasTiers: false },
 ];
 
