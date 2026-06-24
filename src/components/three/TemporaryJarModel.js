@@ -58,6 +58,24 @@ const GROUND_Y = JAR_DIMENSIONS.bottomY;
 // mesh already sits at the jar's mouth height once normalized.
 const PRODUCT_FILL_Y_NUDGE = 0;
 
+// The source asset's AUTHORED lid position is a "product display" shot
+// (lid already lifted off, posed in the air to show the cream) — not a
+// resting/closed pose. Its raw Y sits roughly 68 model-units above the
+// jar's own rim (taller than the body itself), which is what made the
+// lid render fully detached. The fix seats the lid directly on the
+// body's rim instead of trusting that authored Y. A small overlap
+// (fraction of the lid's own height) pushes it slightly down into the
+// rim so it reads as sealed rather than just tangent/touching.
+const LID_SEAT_OVERLAP_RATIO = 0.16;
+
+function clampMinLightness(hex, minLightness) {
+    const color = new THREE.Color(hex);
+    const hsl = { h: 0, s: 0, l: 0 };
+    color.getHSL(hsl);
+    if (hsl.l < minLightness) color.setHSL(hsl.h, hsl.s, minLightness);
+    return color;
+}
+
 function cloneMeshNode(scene, name) {
     const source = scene.getObjectByName(name);
     if (!source) return null;
@@ -114,20 +132,32 @@ export default function TemporaryJarModel({ lidGroupRef, productRef, variant }) 
         lidBox.expandByObject(lidMainSource);
         lidBox.expandByObject(lidBadgeSource);
         const lidCenter = lidBox.getCenter(new THREE.Vector3());
+        const lidHeight = lidBox.max.y - lidBox.min.y;
+
+        // The body's own rim height (excludes the lid/fill so this is
+        // purely "how tall is the jar body"), used to seat the lid.
+        const bodyOnlyBox = new THREE.Box3();
+        bodyOnlyBox.expandByObject(jarBodySource);
+        const seatedLidCenterY = bodyOnlyBox.max.y + lidHeight * (0.5 - LID_SEAT_OVERLAP_RATIO);
+        // Keep the lid's own authored X/Z (already closely aligned with
+        // the body's own horizontal center) — only Y needed correcting.
+        const lidClosedCenter = new THREE.Vector3(lidCenter.x, seatedLidCenterY, lidCenter.z);
 
         const jarBody = cloneMeshNode(scene, NODE_NAMES.jarBody);
         const productFill = cloneMeshNode(scene, NODE_NAMES.productFill);
         const lidMain = cloneMeshNode(scene, NODE_NAMES.lidMain);
         const lidBadge = cloneMeshNode(scene, NODE_NAMES.lidBadge);
 
-        // Re-home the lid meshes' local positions relative to the new
-        // pivot (their parent group) so the combined transform still
-        // lands them exactly where they were authored.
+        // Re-home the lid meshes' local positions relative to their own
+        // authored center (preserves lidMain/lidBadge's correct shape
+        // relative to each other) — the GROUP they're parented to below
+        // uses the seated center instead, so the rigid lid unit as a
+        // whole sits on the rim without altering its internal layout.
         lidMain.position.sub(lidCenter);
         lidBadge.position.sub(lidCenter);
         productFill.position.y += PRODUCT_FILL_Y_NUDGE;
 
-        const lidClosedPosition = lidCenter.clone().multiplyScalar(scale).add(offset);
+        const lidClosedPosition = lidClosedCenter.clone().multiplyScalar(scale).add(offset);
 
         // ---- materials: cloned from the source (no textures to lose),
         // then tinted per-product. Never mutates the cached originals. ----
@@ -148,7 +178,11 @@ export default function TemporaryJarModel({ lidGroupRef, productRef, variant }) 
         const lidMat = lidMain.material.clone();
         lidMat.roughness = 0.35;
         lidMat.metalness = variant.lidMetalness;
-        lidMat.color = new THREE.Color(variant.lidColor);
+        // Several variants' lidColor is near-black, which against this
+        // canvas's black background made the closed lid read as a dark
+        // void/hole rather than a solid cap. Floor its lightness so it
+        // always catches a visible highlight while staying dark/premium.
+        lidMat.color = clampMinLightness(variant.lidColor, 0.16);
         lidMain.material = lidMat;
 
         const badgeMat = lidBadge.material.clone();

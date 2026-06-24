@@ -21,6 +21,14 @@ const OPEN_DELTA = {
     z: JAR_DIMENSIONS.lidOpenZ,
 };
 
+// How far into the opening lift (0–1, relative to the position tween's
+// own start/duration below) the product fill becomes visible — once the
+// lid has cleared enough to plausibly reveal what's underneath, not
+// immediately on tap.
+const REVEAL_AT = 0.85;
+
+const OPEN_STATES = [VIEWER_STATES.OPEN, VIEWER_STATES.PRODUCT_FOCUS];
+
 /**
  * Lid open/close timeline + a single tap-to-toggle handler covering the
  * whole jar. Lighting, camera, and ground shadow are shared (see
@@ -38,7 +46,7 @@ const OPEN_DELTA = {
 export default function JarScene({ product, interactionState, interactionGo, transitionReady, reducedMotion }) {
     const lidObjectRef = useRef(null);
     const closedPoseRef = useRef(null);
-    const productRef = useRef(null);
+    const productObjectRef = useRef(null);
     const tweenRef = useRef(null);
     const variant = resolveJarVariant(product);
 
@@ -56,9 +64,18 @@ export default function JarScene({ product, interactionState, interactionGo, tra
         }
     }, []);
 
+    const setProductRef = useCallback((node) => {
+        productObjectRef.current = node;
+        // Starts hidden — the effect below is the single source of truth
+        // for keeping it in sync with the current/animated state, so a
+        // fresh mount never briefly flashes the fill before that runs.
+        if (node) node.visible = false;
+    }, []);
+
     useEffect(() => {
         const lid = lidObjectRef.current;
         const closed = closedPoseRef.current;
+        const fill = productObjectRef.current;
         if (!lid || !closed) return undefined;
 
         if (tweenRef.current) {
@@ -71,24 +88,46 @@ export default function JarScene({ product, interactionState, interactionGo, tra
             if (reducedMotion) {
                 lid.rotation.y = Math.PI * 2 * FULL_TURNS;
                 lid.position.set(open.x, open.y, open.z);
+                if (fill) fill.visible = true;
                 interactionGo(VIEWER_STATES.OPEN);
                 return undefined;
             }
             const tl = gsap.timeline({ onComplete: () => interactionGo(VIEWER_STATES.OPEN) });
             tl.to(lid.rotation, { y: Math.PI * 2 * FULL_TURNS, duration: 1.1, ease: 'power1.in' });
             tl.to(lid.position, { ...open, duration: 1.0, ease: 'power2.out' }, 0.35);
+            // Revealed only once the lid has visibly cleared the rim —
+            // not the instant the tap registers.
+            tl.call(
+                () => {
+                    if (productObjectRef.current) productObjectRef.current.visible = true;
+                },
+                [],
+                0.35 + REVEAL_AT
+            );
             tweenRef.current = tl;
         } else if (interactionState === VIEWER_STATES.CLOSING) {
             if (reducedMotion) {
                 lid.rotation.y = 0;
                 lid.position.set(closed.x, closed.y, closed.z);
+                if (fill) fill.visible = false;
                 interactionGo(VIEWER_STATES.IDLE);
                 return undefined;
             }
             const tl = gsap.timeline({ onComplete: () => interactionGo(VIEWER_STATES.IDLE) });
+            // Hidden again right away, as the lid starts coming back down
+            // over it, rather than staying visible until fully sealed.
+            tl.call(() => {
+                if (productObjectRef.current) productObjectRef.current.visible = false;
+            });
             tl.to(lid.position, { ...closed, duration: 0.9, ease: 'power2.inOut' });
             tl.to(lid.rotation, { y: 0, duration: 0.9, ease: 'power1.out' }, 0.1);
             tweenRef.current = tl;
+        } else if (fill) {
+            // Settle/resync for any non-animated state (IDLE, INSPECTING,
+            // OPEN, PRODUCT_FOCUS) — covers a fresh mount and the rare
+            // case of the Suspense fallback swapping mid-state, without
+            // a special case for either.
+            fill.visible = OPEN_STATES.includes(interactionState);
         }
 
         return () => {
@@ -103,13 +142,13 @@ export default function JarScene({ product, interactionState, interactionGo, tra
     };
     const pointerHandlers = usePointerToggle(handleTap, toggleEnabled);
 
-    const fallback = <PlaceholderJar lidGroupRef={setLidRef} productRef={productRef} variant={variant} />;
+    const fallback = <PlaceholderJar lidGroupRef={setLidRef} productRef={setProductRef} variant={variant} />;
 
     return (
         <group scale={variant.scale} {...pointerHandlers}>
             <ModelLoadBoundary fallback={fallback}>
                 <Suspense fallback={fallback}>
-                    <TemporaryJarModel lidGroupRef={setLidRef} productRef={productRef} variant={variant} />
+                    <TemporaryJarModel lidGroupRef={setLidRef} productRef={setProductRef} variant={variant} />
                 </Suspense>
             </ModelLoadBoundary>
         </group>
