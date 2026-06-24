@@ -48,6 +48,21 @@ export default function ProductSelector({ activeProduct, onQueueSelect, isIntera
         focusIndexRef.current = indexOfProduct(activeProduct.id);
     }, [activeProduct.id]);
 
+    // Keep the active rail card scrolled into view whenever the active
+    // product changes (rail click, Prev/Next, category/tier, or arrow
+    // keys). Boundary items align to the true edge of the rail instead
+    // of 'center', which is what would otherwise clip the first item
+    // (Pioca) or overscroll past the last (Ampersand). `block: 'nearest'`
+    // keeps this confined to the rail's own horizontal scroll — it never
+    // scrolls the page vertically.
+    useEffect(() => {
+        const index = indexOfProduct(activeProduct.id);
+        const el = document.getElementById(`product-card-${activeProduct.id}`);
+        if (!el) return;
+        const inline = index === 0 ? 'start' : index === PRODUCTS.length - 1 ? 'end' : 'nearest';
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline });
+    }, [activeProduct.id]);
+
     const handleCategoryClick = (categoryId, hasTiers) => {
         setSelectedCategory(categoryId);
         if (categoryId === activeProduct.category) return;
@@ -78,8 +93,10 @@ export default function ProductSelector({ activeProduct, onQueueSelect, isIntera
         const next = PRODUCTS[nextIndex];
         onQueueSelect(next.id);
         // Always allowed to succeed: the destination card is focusable
-        // even while a transition is in flight.
-        document.getElementById(`product-card-${next.id}`)?.focus();
+        // even while a transition is in flight. preventScroll avoids the
+        // browser's own default focus-scroll fighting with the
+        // boundary-aware scrollIntoView effect above.
+        document.getElementById(`product-card-${next.id}`)?.focus({ preventScroll: true });
     };
 
     const activeCategory = CATEGORIES.find((c) => c.id === selectedCategory);

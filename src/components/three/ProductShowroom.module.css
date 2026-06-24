@@ -193,31 +193,26 @@
 /* ── Product rail ──
    The outer scroll container is intentionally bare (no border/background/
    radius/shadow) so the row of buttons floats directly on the page —
-   only the individual buttons below carry visible borders. Overflow is
-   preserved for horizontal scrolling, just made visually transparent,
-   including the scrollbar itself. */
+   only the individual buttons below carry visible borders. Overflow-x
+   stays scrollable (mouse wheel, trackpad, touch, keyboard, and
+   scrollIntoView all keep working) — only the scrollbar's own visible
+   track/thumb is hidden, cross-browser, with no replacement indicator. */
 .rail {
     display: flex;
-    gap: 0.6rem;
+    gap: 0.875rem;
     width: 100%;
     overflow-x: auto;
-    padding: 0.25rem 0.25rem 0.75rem;
+    padding: 0.25rem 0.5rem 0.75rem;
     border: none;
     background: none;
     box-shadow: none;
     border-radius: 0;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .rail::-webkit-scrollbar {
-    height: 4px;
-    background: transparent;
-}
-
-.rail::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+    display: none;
 }
 
 .railCard {
@@ -283,6 +278,7 @@
     }
 
     .rail {
+        gap: 0.75rem;
         justify-content: flex-start;
         /* Horizontal swipes on the rail are plain touch scrolling, not a
            canvas gesture — never intercepted by OrbitControls since the

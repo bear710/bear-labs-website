@@ -28,11 +28,11 @@ const ViewerCanvas = dynamic(() => import('./ViewerCanvas'), {
 
 const OPEN_STATES = [VIEWER_STATES.OPEN, VIEWER_STATES.PRODUCT_FOCUS];
 
-const TOGGLE_LABELS = {
-    open: { closed: 'Open Jar', open: 'Close Jar' },
-    extract: { closed: 'Reveal Vape', open: 'Return Vape' },
-    reveal: { closed: 'Reveal Product', open: 'Close Product' },
-};
+// One universal label regardless of product type (jar/vape/Ampersand) —
+// avoids product-specific wording in both the visible button and its
+// aria-label.
+const TOGGLE_LABEL_CLOSED = 'Explore Package';
+const TOGGLE_LABEL_OPEN = 'Close Package';
 
 /**
  * One product's stage + its toggle/reset controls. Rendered keyed by
@@ -78,8 +78,7 @@ export default function Product3DViewer({
         }
     };
 
-    const labels = TOGGLE_LABELS[product.interactionType] || TOGGLE_LABELS.open;
-    const toggleLabel = isOpenish ? labels.open : labels.closed;
+    const toggleLabel = isOpenish ? TOGGLE_LABEL_OPEN : TOGGLE_LABEL_CLOSED;
 
     return (
         <div className={styles.viewer}>
@@ -117,7 +116,7 @@ export default function Product3DViewer({
                     />
                 )}
 
-                {mounted && webglSupported && <InteractionHint state={state} product={product} />}
+                {mounted && webglSupported && <InteractionHint state={state} />}
             </div>
 
             <div className={styles.controls}>
