@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large temporary 3D source assets (kept locally, not committed —
+# see design-assets/3d-source/placeholder-concentrate-jar/README.md)
+/design-assets/3d-source/placeholder-concentrate-jar/Cream Jar 05.gltf
+/design-assets/3d-source/placeholder-concentrate-jar/placeholder-concentrate-jar.glb
