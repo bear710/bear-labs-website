@@ -139,14 +139,20 @@ export default function ProductSelector({ activeProduct, onQueueSelect, isIntera
                             role="option"
                             aria-selected={isActive}
                             aria-disabled={disabledAttr}
-                            aria-label={`${product.name}${isActive ? ' (currently viewing)' : ''}`}
+                            aria-label={`${product.railLabel}${isActive ? ' (currently viewing)' : ''}`}
                             className={`${styles.railCard} ${isActive ? styles.railCardActive : ''}`}
                             style={{ '--card-accent': product.accent }}
                             onClick={() => handleRailClick(product)}
                             onKeyDown={handleRailKeyDown}
                             tabIndex={isActive ? 0 : -1}
                         >
-                            <span className={styles.railCardName}>{product.shortName}</span>
+                            <span className={styles.railCardName}>
+                                {product.railLabelLines.map((line, i) => (
+                                    <span key={i} className={styles.railCardLine}>
+                                        {line}
+                                    </span>
+                                ))}
+                            </span>
                         </button>
                     );
                 })}

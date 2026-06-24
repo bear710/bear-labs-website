@@ -96,7 +96,10 @@
     outline-offset: 3px;
 }
 
-/* ── Selector ── */
+/* ── Selector ──
+   No border/background/shadow here on purpose — the selector (and the
+   rail inside it) must float on the page background, never read as a
+   card or panel. Only the individual buttons carry their own borders. */
 .selector {
     display: flex;
     flex-direction: column;
@@ -104,6 +107,10 @@
     gap: 1rem;
     width: 100%;
     max-width: 760px;
+    border: none;
+    background: none;
+    box-shadow: none;
+    outline: none;
 }
 
 .categoryTabs {
@@ -183,20 +190,44 @@
     font-weight: 800;
 }
 
-/* ── Product rail ── */
+/* ── Product rail ──
+   The outer scroll container is intentionally bare (no border/background/
+   radius/shadow) so the row of buttons floats directly on the page —
+   only the individual buttons below carry visible borders. Overflow is
+   preserved for horizontal scrolling, just made visually transparent,
+   including the scrollbar itself. */
 .rail {
     display: flex;
     gap: 0.6rem;
     width: 100%;
     overflow-x: auto;
     padding: 0.25rem 0.25rem 0.75rem;
+    border: none;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
     scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.rail::-webkit-scrollbar {
+    height: 4px;
+    background: transparent;
+}
+
+.rail::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
 }
 
 .railCard {
     flex: 0 0 auto;
-    min-width: 92px;
-    padding: 0.6rem 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 76px;
+    min-height: 60px;
+    padding: 0.5rem 0.7rem;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.03);
@@ -222,8 +253,17 @@
 }
 
 .railCardName {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+}
+
+.railCardLine {
     display: block;
     white-space: nowrap;
+    line-height: 1.25;
 }
 
 /* ── Responsive ── */
@@ -251,11 +291,8 @@
     }
 
     .railCard {
-        min-height: 44px;
-        font-size: 0.78rem;
-    }
-
-    .railCardName {
+        min-height: 64px;
+        min-width: 80px;
         font-size: 0.78rem;
     }
 }
