@@ -18,7 +18,7 @@ const DEFAULT_VIEWS = {
  * component never needs to know which product is active.
  */
 export default function CameraController({ state, reducedMotion, controlsRef, go, views = DEFAULT_VIEWS }) {
-    const { camera } = useThree();
+    const { camera, gl } = useThree();
     const tweenRef = useRef(null);
     const orbitRef = useRef(null);
 
@@ -35,6 +35,31 @@ export default function CameraController({ state, reducedMotion, controlsRef, go
         controls.addEventListener('start', handleStart);
         return () => controls.removeEventListener('start', handleStart);
     }, [state, go]);
+
+    // Grab/grabbing cursor for the rotate gesture, application-wide
+    // regardless of which product is active. usePointerToggle handles
+    // the "pointer" hover affordance over tappable areas separately, and
+    // always restores to 'grab' (not 'grabbing') on pointer-out so the
+    // two never fight over the resting cursor.
+    useEffect(() => {
+        const controls = orbitRef.current;
+        const el = gl?.domElement;
+        if (!controls || !el) return undefined;
+        el.style.cursor = 'grab';
+        const handleStart = () => {
+            el.style.cursor = 'grabbing';
+        };
+        const handleEnd = () => {
+            el.style.cursor = 'grab';
+        };
+        controls.addEventListener('start', handleStart);
+        controls.addEventListener('end', handleEnd);
+        return () => {
+            controls.removeEventListener('start', handleStart);
+            controls.removeEventListener('end', handleEnd);
+            el.style.cursor = '';
+        };
+    }, [gl]);
 
     useEffect(() => {
         camera.position.set(...views.inspecting.position);

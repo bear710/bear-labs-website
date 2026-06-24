@@ -3,14 +3,16 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import PlaceholderJar, { JAR_DIMENSIONS } from './PlaceholderJar';
 import { resolveJarVariant } from './productConfig';
-import { VIEWER_STATES } from './useViewerState';
+import { VIEWER_STATES, getToggleTarget } from './useViewerState';
+import { usePointerToggle } from './usePointerToggle';
 
 const FULL_TURNS = 3;
 
 /**
- * Lid open/close timeline + lid/product raycast handlers. Lighting,
- * camera, and ground shadow are shared (see ViewerCanvas) — this
- * component only owns jar geometry and its own interaction.
+ * Lid open/close timeline + a single tap-to-toggle handler covering the
+ * whole jar. Lighting, camera, and ground shadow are shared (see
+ * ViewerCanvas) — this component only owns jar geometry and its own
+ * interaction.
  *
  * Conforms to the showroom's scene contract:
  *   { product, interactionState, interactionGo, transitionReady }
@@ -69,40 +71,16 @@ export default function JarScene({ product, interactionState, interactionGo, tra
         };
     }, [interactionState, reducedMotion, interactionGo]);
 
-    const handleLidPointerDown = (e) => {
-        e.stopPropagation();
-        if (!transitionReady) return;
-        if (interactionState === VIEWER_STATES.IDLE || interactionState === VIEWER_STATES.INSPECTING) {
-            interactionGo(VIEWER_STATES.OPENING);
-        }
+    const toggleEnabled = transitionReady && getToggleTarget(interactionState) !== null;
+    const handleTap = () => {
+        const target = getToggleTarget(interactionState);
+        if (target) interactionGo(target);
     };
-
-    const handleProductPointerDown = (e) => {
-        e.stopPropagation();
-        if (!transitionReady) return;
-        if (interactionState === VIEWER_STATES.OPEN) {
-            interactionGo(VIEWER_STATES.PRODUCT_FOCUS);
-        } else if (interactionState === VIEWER_STATES.PRODUCT_FOCUS) {
-            interactionGo(VIEWER_STATES.OPEN);
-        }
-    };
-
-    const lidInteractive =
-        transitionReady && (interactionState === VIEWER_STATES.IDLE || interactionState === VIEWER_STATES.INSPECTING);
-    const productInteractive =
-        transitionReady && (interactionState === VIEWER_STATES.OPEN || interactionState === VIEWER_STATES.PRODUCT_FOCUS);
+    const pointerHandlers = usePointerToggle(handleTap, toggleEnabled);
 
     return (
-        <group scale={variant.scale}>
-            <PlaceholderJar
-                lidGroupRef={lidRef}
-                productRef={productRef}
-                onLidPointerDown={handleLidPointerDown}
-                onProductPointerDown={handleProductPointerDown}
-                lidInteractive={lidInteractive}
-                productInteractive={productInteractive}
-                variant={variant}
-            />
+        <group scale={variant.scale} {...pointerHandlers}>
+            <PlaceholderJar lidGroupRef={lidRef} productRef={productRef} variant={variant} />
         </group>
     );
 }

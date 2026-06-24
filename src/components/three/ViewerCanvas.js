@@ -46,7 +46,10 @@ export default function ViewerCanvas({
             camera={{ fov: 42, near: 0.1, far: 50 }}
             shadows={false}
         >
-            <color attach="background" args={['#070707']} />
+            {/* Matches the page's own background (globals.css --color-black)
+                so the canvas blends into the page instead of reading as a
+                separate boxed card. */}
+            <color attach="background" args={['#000000']} />
             <Suspense fallback={null}>
                 <LightingRig />
                 <ProductStage

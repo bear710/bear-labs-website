@@ -39,6 +39,20 @@ function reducer(state, action) {
     }
 }
 
+/**
+ * The one place that decides what a tap/click *means* for the current
+ * state — used identically by every scene's canvas tap handler and by
+ * Product3DViewer's primary button, so there is exactly one
+ * implementation of "open vs close" rather than two that can drift
+ * apart. Returns null while a scripted transition (OPENING/CLOSING) is
+ * already running, so a stray tap is simply ignored.
+ */
+export function getToggleTarget(state) {
+    if (state === VIEWER_STATES.IDLE || state === VIEWER_STATES.INSPECTING) return VIEWER_STATES.OPENING;
+    if (state === VIEWER_STATES.OPEN || state === VIEWER_STATES.PRODUCT_FOCUS) return VIEWER_STATES.CLOSING;
+    return null;
+}
+
 export function useViewerState() {
     const [state, dispatch] = useReducer(reducer, VIEWER_STATES.IDLE);
 

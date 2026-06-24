@@ -2,7 +2,8 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { VIEWER_STATES } from './useViewerState';
+import { VIEWER_STATES, getToggleTarget } from './useViewerState';
+import { usePointerToggle } from './usePointerToggle';
 
 /**
  * Placeholder compact case for the ingestible. Deliberately simple, per
@@ -84,19 +85,15 @@ export default function AmpersandScene({ product, interactionState, interactionG
         };
     }, [interactionState, reducedMotion, interactionGo]);
 
-    const handleLidPointerDown = (e) => {
-        e.stopPropagation();
-        if (!transitionReady) return;
-        if (interactionState === VIEWER_STATES.IDLE || interactionState === VIEWER_STATES.INSPECTING) {
-            interactionGo(VIEWER_STATES.OPENING);
-        }
+    const toggleEnabled = transitionReady && getToggleTarget(interactionState) !== null;
+    const handleTap = () => {
+        const target = getToggleTarget(interactionState);
+        if (target) interactionGo(target);
     };
-
-    const lidInteractive =
-        transitionReady && (interactionState === VIEWER_STATES.IDLE || interactionState === VIEWER_STATES.INSPECTING);
+    const pointerHandlers = usePointerToggle(handleTap, toggleEnabled);
 
     return (
-        <group>
+        <group {...pointerHandlers}>
             <mesh name="ContainerBody" material={bodyMaterial} position={[0, -0.06, 0]}>
                 <boxGeometry args={[0.85, 0.32, 0.55]} />
             </mesh>
@@ -106,20 +103,10 @@ export default function AmpersandScene({ product, interactionState, interactionG
             <mesh name="LabelBack" material={labelMaterial} position={[0, -0.06, -0.276]} rotation={[0, Math.PI, 0]}>
                 <planeGeometry args={[0.5, 0.18]} />
             </mesh>
-            <mesh
-                name="ProductInterior"
-                ref={interiorRef}
-                material={interiorMaterial}
-                position={[0, -0.04, 0]}
-            >
+            <mesh name="ProductInterior" ref={interiorRef} material={interiorMaterial} position={[0, -0.04, 0]}>
                 <boxGeometry args={[0.62, 0.05, 0.38]} />
             </mesh>
-            <group
-                name="Lid"
-                ref={lidRef}
-                position={[0, AMPERSAND_DIMENSIONS.lidClosedY, -0.27]}
-                onPointerDown={lidInteractive ? handleLidPointerDown : undefined}
-            >
+            <group name="Lid" ref={lidRef} position={[0, AMPERSAND_DIMENSIONS.lidClosedY, -0.27]}>
                 <mesh material={lidMaterial} position={[0, 0, 0.27]}>
                     <boxGeometry args={[0.87, 0.1, 0.57]} />
                 </mesh>

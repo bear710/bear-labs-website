@@ -2,7 +2,8 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { VIEWER_STATES } from './useViewerState';
+import { VIEWER_STATES, getToggleTarget } from './useViewerState';
+import { usePointerToggle } from './usePointerToggle';
 
 /**
  * Placeholder mylar package + cartridge. Simple geometry only, per the
@@ -88,38 +89,17 @@ export default function VapeScene({ product, interactionState, interactionGo, tr
         };
     }, [interactionState, reducedMotion, interactionGo]);
 
-    const handlePackagePointerDown = (e) => {
-        e.stopPropagation();
-        if (!transitionReady) return;
-        if (interactionState === VIEWER_STATES.IDLE || interactionState === VIEWER_STATES.INSPECTING) {
-            interactionGo(VIEWER_STATES.OPENING);
-        }
+    const toggleEnabled = transitionReady && getToggleTarget(interactionState) !== null;
+    const handleTap = () => {
+        const target = getToggleTarget(interactionState);
+        if (target) interactionGo(target);
     };
-
-    const handleVapePointerDown = (e) => {
-        e.stopPropagation();
-        if (!transitionReady) return;
-        if (interactionState === VIEWER_STATES.OPEN) {
-            interactionGo(VIEWER_STATES.PRODUCT_FOCUS);
-        } else if (interactionState === VIEWER_STATES.PRODUCT_FOCUS) {
-            interactionGo(VIEWER_STATES.OPEN);
-        }
-    };
-
-    const packageInteractive =
-        transitionReady && (interactionState === VIEWER_STATES.IDLE || interactionState === VIEWER_STATES.INSPECTING);
-    const vapeInteractive =
-        transitionReady && (interactionState === VIEWER_STATES.OPEN || interactionState === VIEWER_STATES.PRODUCT_FOCUS);
+    const pointerHandlers = usePointerToggle(handleTap, toggleEnabled);
 
     return (
-        <group>
+        <group {...pointerHandlers}>
             {/* PackageBody + PackageTop: mylar pouch placeholder, opens by sliding back/down */}
-            <group
-                name="PackageBody"
-                ref={packageRef}
-                position={[0, VAPE_DIMENSIONS.packageClosedY, 0]}
-                onPointerDown={packageInteractive ? handlePackagePointerDown : undefined}
-            >
+            <group name="PackageBody" ref={packageRef} position={[0, VAPE_DIMENSIONS.packageClosedY, 0]}>
                 <mesh material={packageMaterial}>
                     <boxGeometry args={[0.9, 1.35, 0.16]} />
                 </mesh>
@@ -135,11 +115,7 @@ export default function VapeScene({ product, interactionState, interactionGo, tr
             </group>
 
             {/* VapeBody + Mouthpiece: starts tucked behind the package, lifts out on open */}
-            <group
-                ref={vapeRef}
-                position={[0, VAPE_DIMENSIONS.vapeHiddenY, 0]}
-                onPointerDown={vapeInteractive ? handleVapePointerDown : undefined}
-            >
+            <group ref={vapeRef} position={[0, VAPE_DIMENSIONS.vapeHiddenY, 0]}>
                 <mesh name="VapeBody" material={bodyMaterial}>
                     <cylinderGeometry args={[0.11, 0.11, 0.85, 24]} />
                 </mesh>

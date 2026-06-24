@@ -33,15 +33,7 @@ const DEFAULT_VARIANT = {
     accent: null,
 };
 
-export default function PlaceholderJar({
-    lidGroupRef,
-    productRef,
-    onLidPointerDown,
-    onProductPointerDown,
-    lidInteractive = true,
-    productInteractive = false,
-    variant = DEFAULT_VARIANT,
-}) {
+export default function PlaceholderJar({ lidGroupRef, productRef, variant = DEFAULT_VARIANT }) {
     const glassMaterial = useMemo(
         () =>
             new THREE.MeshPhysicalMaterial({
@@ -146,7 +138,6 @@ export default function PlaceholderJar({
                 ref={productRef}
                 material={productMaterial}
                 position={[0, JAR_DIMENSIONS.productY, 0]}
-                onPointerDown={productInteractive ? onProductPointerDown : undefined}
             >
                 <cylinderGeometry args={[JAR_DIMENSIONS.radius - 0.1, JAR_DIMENSIONS.radius - 0.1, 0.18, 48]} />
             </mesh>
@@ -156,7 +147,6 @@ export default function PlaceholderJar({
                 name="Lid"
                 ref={lidGroupRef}
                 position={[0, JAR_DIMENSIONS.lidClosedY, 0]}
-                onPointerDown={lidInteractive ? onLidPointerDown : undefined}
             >
                 <mesh material={lidMaterial}>
                     <cylinderGeometry args={[1.0, 1.0, 0.25, 48]} />

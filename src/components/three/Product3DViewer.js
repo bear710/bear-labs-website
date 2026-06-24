@@ -1,7 +1,7 @@
 'use client';
 import { useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { useViewerState, VIEWER_STATES } from './useViewerState';
+import { useViewerState, VIEWER_STATES, getToggleTarget } from './useViewerState';
 import { SHOWROOM_STATES } from './useShowroomTransition';
 import InteractionHint from './InteractionHint';
 import styles from './Product3DViewer.module.css';
@@ -26,23 +26,24 @@ const ViewerCanvas = dynamic(() => import('./ViewerCanvas'), {
     loading: () => null,
 });
 
-const OPEN_LABELS = {
-    open: 'Open Jar',
-    extract: 'Extract Vape',
-    reveal: 'Reveal Product',
-};
+const OPEN_STATES = [VIEWER_STATES.OPEN, VIEWER_STATES.PRODUCT_FOCUS];
 
-const RESET_LABELS = {
-    open: 'Reset the jar to its closed state',
-    extract: 'Reset the vape back into its package',
-    reveal: 'Reset the package to its closed state',
+const TOGGLE_LABELS = {
+    open: { closed: 'Open Jar', open: 'Close Jar' },
+    extract: { closed: 'Reveal Vape', open: 'Return Vape' },
+    reveal: { closed: 'Reveal Product', open: 'Close Product' },
 };
 
 /**
- * One product's stage + its own Open/Reset controls. Rendered keyed by
+ * One product's stage + its toggle/reset controls. Rendered keyed by
  * product id from ProductShowroom — switching products remounts this,
  * which is what resets useViewerState back to idle with no manual
  * cleanup required.
+ *
+ * The primary button below and every scene's canvas tap handler both
+ * call `getToggleTarget(state)` — the single shared decision of what a
+ * tap/click means right now — so there is exactly one implementation of
+ * open-vs-close, never two that can drift apart.
  */
 export default function Product3DViewer({
     product,
@@ -55,30 +56,39 @@ export default function Product3DViewer({
     isMobile,
     dpr,
 }) {
-    const { state, go } = useViewerState();
+    const { state, go, force } = useViewerState();
     const controlsRef = useRef(null);
 
     const transitionReady = transition === SHOWROOM_STATES.READY || transition === SHOWROOM_STATES.IDLE;
-    const canOpen = transitionReady && (state === VIEWER_STATES.IDLE || state === VIEWER_STATES.INSPECTING);
-    const canReset = transitionReady && (state === VIEWER_STATES.OPEN || state === VIEWER_STATES.PRODUCT_FOCUS);
+    const toggleTarget = transitionReady ? getToggleTarget(state) : null;
+    const isOpenish = OPEN_STATES.includes(state) || state === VIEWER_STATES.CLOSING;
 
-    const handleOpen = () => {
-        if (canOpen) go(VIEWER_STATES.OPENING);
+    const canResetView = transitionReady && (OPEN_STATES.includes(state) || state === VIEWER_STATES.INSPECTING);
+
+    const handleToggle = () => {
+        if (toggleTarget) go(toggleTarget);
     };
 
-    const handleReset = () => {
-        if (canReset) go(VIEWER_STATES.CLOSING);
+    const handleResetView = () => {
+        if (!canResetView) return;
+        if (OPEN_STATES.includes(state)) {
+            go(VIEWER_STATES.CLOSING);
+        } else if (state === VIEWER_STATES.INSPECTING) {
+            force(VIEWER_STATES.IDLE);
+        }
     };
 
-    const openLabel = OPEN_LABELS[product.interactionType] || OPEN_LABELS.open;
-    const resetLabel = RESET_LABELS[product.interactionType] || RESET_LABELS.open;
+    const labels = TOGGLE_LABELS[product.interactionType] || TOGGLE_LABELS.open;
+    const toggleLabel = isOpenish ? labels.open : labels.closed;
 
     return (
         <div className={styles.viewer}>
             <div
                 className={styles.canvasWrap}
                 role="img"
-                aria-label={`Interactive 3D preview of ${product.name}. Drag to rotate, or use the controls below.`}
+                aria-label={`Interactive 3D preview of ${product.name}. Drag to rotate, tap to ${
+                    isOpenish ? 'close' : 'open'
+                }, or use the controls below.`}
             >
                 {!mounted && (
                     <div className={styles.loadingFallback}>
@@ -114,20 +124,20 @@ export default function Product3DViewer({
                 <button
                     type="button"
                     className={styles.controlBtn}
-                    onClick={handleOpen}
-                    disabled={!mounted || !webglSupported || !canOpen}
-                    aria-label={openLabel}
+                    onClick={handleToggle}
+                    disabled={!mounted || !webglSupported || !toggleTarget}
+                    aria-label={toggleLabel}
                 >
-                    {openLabel}
+                    {toggleLabel}
                 </button>
                 <button
                     type="button"
-                    className={styles.controlBtn}
-                    onClick={handleReset}
-                    disabled={!mounted || !webglSupported || !canReset}
-                    aria-label={resetLabel}
+                    className={styles.controlBtnSecondary}
+                    onClick={handleResetView}
+                    disabled={!mounted || !webglSupported || !canResetView}
+                    aria-label="Reset view and close the product"
                 >
-                    Reset
+                    Reset View
                 </button>
             </div>
         </div>

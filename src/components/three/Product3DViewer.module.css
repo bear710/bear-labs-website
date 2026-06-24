@@ -11,11 +11,12 @@
     width: 100%;
     max-width: 640px;
     aspect-ratio: 4 / 3;
-    border-radius: 16px;
     overflow: hidden;
-    background: radial-gradient(circle at 50% 35%, #14161a 0%, #050505 75%);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    /* No border/background box here on purpose — the canvas's own WebGL
+       clear color matches the page background so the product appears to
+       float directly on the page rather than sit inside a card. */
     touch-action: none;
+    cursor: grab;
 }
 
 .canvasWrap canvas {
@@ -103,8 +104,40 @@
     outline-offset: 3px;
 }
 
+/* Secondary "Reset View" — visually quieter than the primary toggle,
+   since it's a fallback/accessibility action, not the main interaction. */
+.controlBtnSecondary {
+    padding: 0.7rem 1.6rem;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease, opacity 0.25s ease;
+}
+
+.controlBtnSecondary:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.controlBtnSecondary:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.controlBtnSecondary:focus-visible {
+    outline: 2px solid var(--color-turquoise, #81cbd2);
+    outline-offset: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .controlBtn {
+    .controlBtn,
+    .controlBtnSecondary {
         transition: none;
     }
 }
@@ -121,7 +154,8 @@
         flex-wrap: wrap;
     }
 
-    .controlBtn {
+    .controlBtn,
+    .controlBtnSecondary {
         min-height: 44px;
         flex: 1 1 140px;
     }
