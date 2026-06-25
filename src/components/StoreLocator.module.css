@@ -1,7 +1,6 @@
 .section {
     padding: 6rem 10%;
     background-color: var(--color-black);
-    min-height: 100vh;
 }
 
 .heading {
@@ -17,14 +16,14 @@
     font-size: 1.2rem;
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
 }
 
 .buttonContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 300px;
+    margin-bottom: 3rem;
 }
 
 .storeButton {

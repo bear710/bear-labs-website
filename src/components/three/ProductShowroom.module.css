@@ -1,0 +1,310 @@
+.showroom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+/* ── Product info ──
+   infoName/infoDescription reserve a fixed-height box (sized for the
+   longest product name/description) so switching between products with
+   very different text lengths never shifts the layout below. */
+.info {
+    text-align: center;
+    max-width: 560px;
+}
+
+.infoFamily {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.infoName {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4.6rem;
+    font-size: 1.9rem;
+    font-weight: 900;
+    line-height: 1.15;
+    color: white;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+}
+
+.infoDescription {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    min-height: calc(0.95rem * 1.55 * 3);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* ── Stage row (prev / viewer / next) ── */
+.stageRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    justify-content: center;
+}
+
+.navBtn {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: transparent;
+    color: white;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+}
+
+.navBtn:hover:not([aria-disabled='true']) {
+    border-color: var(--color-turquoise, #81cbd2);
+    background: rgba(129, 203, 210, 0.1);
+}
+
+/* Dimmed but intentionally still focusable/clickable while a transition
+   is in flight — input is queued and applied once it settles rather
+   than rejected, so the cursor stays a normal pointer. */
+.navBtn[aria-disabled='true'] {
+    opacity: 0.3;
+}
+
+.navBtn:focus-visible {
+    outline: 2px solid var(--color-turquoise, #81cbd2);
+    outline-offset: 3px;
+}
+
+/* ── Selector ──
+   No border/background/shadow here on purpose — the selector (and the
+   rail inside it) must float on the page background, never read as a
+   card or panel. Only the individual buttons carry their own borders. */
+.selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 760px;
+    border: none;
+    background: none;
+    box-shadow: none;
+    outline: none;
+}
+
+/* No flex-wrap here on purpose — a tab with a longer label (e.g. "Live
+   Resin 510 Vape") must stay on one line. When the row is too wide for
+   the viewport it scrolls horizontally instead of wrapping or
+   overflowing the page; the scrollbar itself is hidden cross-browser,
+   same technique as the lower product rail. Centered when it fits
+   (shrink-to-fit width + the parent .selector's align-items: center)
+   without the classic flex justify-content:center + overflow pitfall. */
+.categoryTabs {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0.15rem 0.25rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.categoryTabs::-webkit-scrollbar {
+    display: none;
+}
+
+.categoryTab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0.55rem 1.3rem;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.categoryTab:hover:not([aria-disabled='true']) {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.categoryTabActive {
+    border-color: var(--color-turquoise, #81cbd2);
+    background: rgba(129, 203, 210, 0.12);
+    color: white;
+}
+
+/* Same intentionally-still-interactive dimming as navBtn above. */
+.categoryTab[aria-disabled='true'],
+.tierBtn[aria-disabled='true'],
+.railCard[aria-disabled='true'] {
+    opacity: 0.45;
+}
+
+.categoryTab:focus-visible,
+.tierBtn:focus-visible,
+.railCard:focus-visible {
+    outline: 2px solid var(--color-turquoise, #81cbd2);
+    outline-offset: 2px;
+}
+
+.tierRow {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tierBtn {
+    padding: 0.4rem 1.1rem;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.25s ease;
+}
+
+.tierBtn:hover:not([aria-disabled='true']) {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.tierBtnActive {
+    border-color: var(--color-turquoise, #81cbd2);
+    background: var(--color-turquoise, #81cbd2);
+    color: #000000;
+    font-weight: 800;
+}
+
+/* ── Product rail ──
+   The outer scroll container is intentionally bare (no border/background/
+   radius/shadow) so the row of buttons floats directly on the page —
+   only the individual buttons below carry visible borders. Overflow-x
+   stays scrollable (mouse wheel, trackpad, touch, keyboard, and
+   scrollIntoView all keep working) — only the scrollbar's own visible
+   track/thumb is hidden, cross-browser, with no replacement indicator. */
+.rail {
+    display: flex;
+    gap: 0.875rem;
+    width: 100%;
+    overflow-x: auto;
+    padding: 0.25rem 0.5rem 0.75rem;
+    border: none;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.rail::-webkit-scrollbar {
+    display: none;
+}
+
+.railCard {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 76px;
+    min-height: 60px;
+    padding: 0.5rem 0.7rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
+    text-align: center;
+}
+
+.railCard:hover:not([aria-disabled='true']) {
+    border-color: var(--card-accent, rgba(255, 255, 255, 0.3));
+    color: white;
+}
+
+.railCardActive {
+    border-color: var(--card-accent, var(--color-turquoise, #81cbd2));
+    background: rgba(255, 255, 255, 0.07);
+    color: white;
+    box-shadow: 0 0 0 1px var(--card-accent, transparent) inset;
+}
+
+.railCardName {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+}
+
+.railCardLine {
+    display: block;
+    white-space: nowrap;
+    line-height: 1.25;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .stageRow {
+        gap: 0.5rem;
+    }
+
+    .navBtn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .infoName {
+        font-size: 1.5rem;
+        min-height: 3.7rem;
+    }
+
+    .rail {
+        gap: 0.75rem;
+        justify-content: flex-start;
+        /* Horizontal swipes on the rail are plain touch scrolling, not a
+           canvas gesture — never intercepted by OrbitControls since the
+           rail is outside the canvas DOM element entirely. */
+        touch-action: pan-x;
+    }
+
+    .railCard {
+        min-height: 64px;
+        min-width: 80px;
+        font-size: 0.78rem;
+    }
+}
