@@ -1,6 +1,7 @@
 'use client';
 
 import styles from './StoreLocator.module.css';
+import WeedmapsLocator from './WeedmapsLocator';
 
 export default function StoreLocator() {
     return (
@@ -14,10 +15,13 @@ export default function StoreLocator() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.storeButton}
+                    aria-label="Shop Bear Labs on Weedmaps (opens in a new tab)"
                 >
-                    View Store Locator
+                    Shop Bear Labs
                 </a>
             </div>
+
+            <WeedmapsLocator />
         </section>
     );
 }

@@ -1,0 +1,41 @@
+.locatorWrapper {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.loadingState,
+.errorState {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+    padding: 1.5rem 0;
+}
+
+.errorState {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* The embed script gives its own iframe `width:100%; height:100%;` —
+   this container is what that percentage actually resolves against,
+   so it needs a real height from the start (not just min-height),
+   reserved up front to avoid layout shift once the iframe populates
+   it. Rounding + overflow:hidden only clips the outer edges of the
+   iframe element itself — nothing inside the (cross-origin) embed is
+   touched or restyled. */
+.embedContainer {
+    width: 100%;
+    height: 760px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+@media (max-width: 768px) {
+    .embedContainer {
+        /* Taller on mobile — the embed's own search/filter controls and
+           retailer cards stack vertically instead of sitting side by
+           side, so the same content needs more height at this width. */
+        height: 860px;
+    }
+}
