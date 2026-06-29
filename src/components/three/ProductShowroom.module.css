@@ -214,16 +214,30 @@
    every card shares the same sizing rules, none are styled
    individually. Intentionally bare (no border/background/radius/
    shadow) so the grid floats directly on the page — only the
-   individual cards carry visible borders. */
+   individual cards carry visible borders.
+
+   Track count is double the *visual* column count at every breakpoint
+   (12 desktop / 8 tablet / 6 mobile) and every card spans 2 tracks —
+   this is purely a centering device, not a layout change: with the
+   same `gap`, a 2-of-12 span is pixel-identical to a 1-of-6 column
+   (the span "absorbs" one internal gap, which exactly offsets the
+   narrower per-track width). It exists so the final, incomplete row
+   can be shifted by exactly half a card width via an explicit
+   `grid-column` on just its own cards below — centering it without
+   touching DOM order, adding placeholder elements, or sizing cards
+   individually. (Sets the full `grid-column` shorthand, not just
+   -start — overriding only grid-column-start would silently drop the
+   inherited `span 2` and collapse the card to one track.) */
 .productGrid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(12, 1fr);
     gap: 0.875rem;
     width: 100%;
     padding: 0.25rem 0.5rem 0.75rem;
 }
 
 .productCard {
+    grid-column: span 2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -239,6 +253,26 @@
     cursor: pointer;
     transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
     text-align: center;
+}
+
+/* Desktop: 6 visual columns -> 6 + 5 of 11. The last 5 (DOM order is
+   untouched — this only repositions their grid cells) are shifted one
+   half-card to the right, leaving an equal half-card gap on each side
+   of the second row. */
+.productCard:nth-last-child(5) {
+    grid-column: 2 / span 2;
+}
+.productCard:nth-last-child(4) {
+    grid-column: 4 / span 2;
+}
+.productCard:nth-last-child(3) {
+    grid-column: 6 / span 2;
+}
+.productCard:nth-last-child(2) {
+    grid-column: 8 / span 2;
+}
+.productCard:nth-last-child(1) {
+    grid-column: 10 / span 2;
 }
 
 .productCard:hover:not([aria-disabled='true']) {
@@ -267,10 +301,22 @@
     line-height: 1.25;
 }
 
-/* Tablet: 4 columns -> 3 rows (4 + 4 + 3) of 11. */
+/* Tablet: 4 visual columns -> 3 rows (4 + 4 + 3) of 11. Same doubled-
+   track centering device as desktop, just with 8 tracks (2 per card)
+   instead of 12 — the last 3 cards shift one half-card right. */
 @media (max-width: 1024px) {
     .productGrid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(8, 1fr);
+    }
+
+    .productCard:nth-last-child(3) {
+        grid-column: 2 / span 2;
+    }
+    .productCard:nth-last-child(2) {
+        grid-column: 4 / span 2;
+    }
+    .productCard:nth-last-child(1) {
+        grid-column: 6 / span 2;
     }
 }
 
@@ -297,12 +343,21 @@
    11; still no horizontal scrolling, only the column count changes. */
 @media (max-width: 600px) {
     .productGrid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 0.6rem;
     }
 
     .productCard {
         min-height: 66px;
         font-size: 0.72rem;
+    }
+
+    /* Same doubled-track centering device, 6 tracks (2 per card) — the
+       last 2 cards shift one half-card right. */
+    .productCard:nth-last-child(2) {
+        grid-column: 2 / span 2;
+    }
+    .productCard:nth-last-child(1) {
+        grid-column: 4 / span 2;
     }
 }
