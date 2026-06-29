@@ -164,13 +164,13 @@
 /* Same intentionally-still-interactive dimming as navBtn above. */
 .categoryTab[aria-disabled='true'],
 .tierBtn[aria-disabled='true'],
-.railCard[aria-disabled='true'] {
+.productCard[aria-disabled='true'] {
     opacity: 0.45;
 }
 
 .categoryTab:focus-visible,
 .tierBtn:focus-visible,
-.railCard:focus-visible {
+.productCard:focus-visible {
     outline: 2px solid var(--color-turquoise, #81cbd2);
     outline-offset: 2px;
 }
@@ -206,39 +206,29 @@
     font-weight: 800;
 }
 
-/* ── Product rail ──
-   The outer scroll container is intentionally bare (no border/background/
-   radius/shadow) so the row of buttons floats directly on the page —
-   only the individual buttons below carry visible borders. Overflow-x
-   stays scrollable (mouse wheel, trackpad, touch, keyboard, and
-   scrollIntoView all keep working) — only the scrollbar's own visible
-   track/thumb is hidden, cross-browser, with no replacement indicator. */
-.rail {
-    display: flex;
+/* ── Product grid ──
+   All 11 products are always visible at once — wrapped into rows via
+   CSS grid rather than a horizontally-scrolling rail, so there's no
+   scrollbar (hidden or otherwise) and nothing to scroll into view.
+   Column count is the ONLY thing that changes per breakpoint below;
+   every card shares the same sizing rules, none are styled
+   individually. Intentionally bare (no border/background/radius/
+   shadow) so the grid floats directly on the page — only the
+   individual cards carry visible borders. */
+.productGrid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
     gap: 0.875rem;
     width: 100%;
-    overflow-x: auto;
     padding: 0.25rem 0.5rem 0.75rem;
-    border: none;
-    background: none;
-    box-shadow: none;
-    border-radius: 0;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
 }
 
-.rail::-webkit-scrollbar {
-    display: none;
-}
-
-.railCard {
-    flex: 0 0 auto;
+.productCard {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 76px;
     min-height: 60px;
-    padding: 0.5rem 0.7rem;
+    padding: 0.5rem 0.6rem;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.03);
@@ -251,19 +241,19 @@
     text-align: center;
 }
 
-.railCard:hover:not([aria-disabled='true']) {
+.productCard:hover:not([aria-disabled='true']) {
     border-color: var(--card-accent, rgba(255, 255, 255, 0.3));
     color: white;
 }
 
-.railCardActive {
+.productCardActive {
     border-color: var(--card-accent, var(--color-turquoise, #81cbd2));
     background: rgba(255, 255, 255, 0.07);
     color: white;
     box-shadow: 0 0 0 1px var(--card-accent, transparent) inset;
 }
 
-.railCardName {
+.productCardName {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -271,10 +261,17 @@
     gap: 0.15rem;
 }
 
-.railCardLine {
+.productCardLine {
     display: block;
     white-space: nowrap;
     line-height: 1.25;
+}
+
+/* Tablet: 4 columns -> 3 rows (4 + 4 + 3) of 11. */
+@media (max-width: 1024px) {
+    .productGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 /* ── Responsive ── */
@@ -292,19 +289,20 @@
         font-size: 1.5rem;
         min-height: 3.7rem;
     }
+}
 
-    .rail {
-        gap: 0.75rem;
-        justify-content: flex-start;
-        /* Horizontal swipes on the rail are plain touch scrolling, not a
-           canvas gesture — never intercepted by OrbitControls since the
-           rail is outside the canvas DOM element entirely. */
-        touch-action: pan-x;
+/* Mobile: narrower than the tablet breakpoint above, so 768px itself
+   still gets the 4-column tablet treatment (3 rows) — only widths
+   below this get compressed further. 3 columns -> 4 rows (3+3+3+2) of
+   11; still no horizontal scrolling, only the column count changes. */
+@media (max-width: 600px) {
+    .productGrid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.6rem;
     }
 
-    .railCard {
-        min-height: 64px;
-        min-width: 80px;
-        font-size: 0.78rem;
+    .productCard {
+        min-height: 66px;
+        font-size: 0.72rem;
     }
 }

@@ -5,9 +5,12 @@ import styles from './Product3DViewer.module.css';
 const OPEN_STATES = [VIEWER_STATES.OPEN, VIEWER_STATES.PRODUCT_FOCUS];
 
 // One universal wording regardless of product type (jar/vape/Ampersand).
+// Visible copy is intentionally "Click" even though touch/drag continue
+// to work exactly as before — this only changes what's printed, not the
+// underlying tap-to-toggle/drag-to-rotate behavior.
 const COPY = {
-    closed: 'Drag to rotate · tap to explore',
-    open: 'Drag to inspect · tap to close',
+    closed: 'Click product to open',
+    open: 'Click product to close',
     [VIEWER_STATES.OPENING]: 'Opening…',
     [VIEWER_STATES.CLOSING]: 'Closing…',
 };
