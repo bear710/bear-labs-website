@@ -7,10 +7,12 @@ import Merch from '../components/Merch';
 import About from '../components/About';
 import CollabPartners from '../components/CollabPartners';
 import Footer from '../components/Footer';
+import ScrollOilWaterfall from '../components/ScrollOilWaterfall';
 
 export default function Home() {
   return (
     <main className={styles.main}>
+      <ScrollOilWaterfall />
       <Header />
       <Hero />
       <ProductShowcase />

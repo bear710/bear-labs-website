@@ -15,7 +15,7 @@ export default function CollabPartners() {
     ];
 
     return (
-        <section className={styles.section}>
+        <section className={styles.section} data-oil-foreground>
             <div className={styles.container}>
                 <h2 className={styles.heading}>COLLAB PARTNERS</h2>
                 <div className={styles.grid}>

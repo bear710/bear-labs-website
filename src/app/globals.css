@@ -26,3 +26,22 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* ── Oil-waterfall layering ──────────────────────────────────────────────
+   The scroll-driven oil waterfall (ScrollOilWaterfall) is one global
+   decorative layer at z-index:1 — above section backgrounds, below content.
+
+   Every section root carries `data-oil-foreground`; this single rule lifts
+   each section's direct content children to z-index:2 so they always paint
+   ABOVE the oil, while the section's own (in-flow) background stays below it.
+   The result — background → oil → content — needs no per-button z-index and
+   no duplicated rules in the individual CSS modules.
+
+   `position: relative` only activates the z-index; it never establishes a
+   layout offset (no top/left) and leaves flex/grid/block flow untouched.
+   Section roots are deliberately left without z-index so they don't create
+   a stacking context that would trap these children below the oil. */
+[data-oil-foreground] > * {
+  position: relative;
+  z-index: 2;
+}

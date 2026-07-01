@@ -2,7 +2,7 @@ import styles from './About.module.css';
 
 export default function About() {
     return (
-        <section id="about" className={styles.section}>
+        <section id="about" className={styles.section} data-oil-foreground>
             <div className={styles.container}>
                 <h2 className={styles.heading}>
                     COMMUNITY DRIVEN.<br />

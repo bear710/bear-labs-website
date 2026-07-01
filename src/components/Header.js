@@ -3,9 +3,9 @@ import Link from 'next/link';
 
 export default function Header() {
     return (
-        <header className={styles.header}>
+        <header className={styles.header} data-oil-origin="true">
             <div className={styles.logo}>
-                <Link href="/">BEAR LABS</Link>
+                <Link href="/" data-oil-logo="true">BEAR LABS</Link>
             </div>
             <nav className={styles.nav}>
                 <Link href="#products">Products</Link>

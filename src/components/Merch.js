@@ -108,7 +108,7 @@ export default function Merch() {
     }, []);
 
     return (
-        <section id="merch" className={styles.section}>
+        <section id="merch" className={styles.section} data-oil-foreground>
             <div className={styles.container}>
                 <h2 className={styles.heading}>BEAR LABS MERCH</h2>
                 <p className={styles.subheading}>

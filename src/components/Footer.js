@@ -2,7 +2,7 @@ import styles from './Footer.module.css';
 
 export default function Footer() {
     return (
-        <footer className={styles.footer}>
+        <footer className={styles.footer} data-oil-foreground>
             <div className={styles.content}>
                 <div className={styles.brand}>
                     <h3>BEAR LABS</h3>

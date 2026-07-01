@@ -1,0 +1,64 @@
+/* The SVG is absolutely positioned in the top-left corner and its
+   width/height are set dynamically by the hook after measuring the
+   BEAR LABS wordmark bounds.
+
+   Layering: this is one global decorative layer at z-index:1 — above the
+   in-flow section backgrounds (which paint below it) but BELOW every
+   section's content, which is lifted to z-index:2 by the shared
+   `[data-oil-foreground] > *` rule in globals.css. The fixed header stays
+   above everything at z-index:100. pointer-events:none guarantees the oil
+   never blocks interaction regardless of stacking. Net visible stack:
+   section background → oil → section content → header. */
+.waterfall {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: visible;
+    will-change: transform;
+    opacity: 0.92;
+}
+
+/* Reduced opacity on the narrower breakpoints where the curtain
+   inevitably overlaps more with centred hero text — keeps the effect
+   bold but does not sacrifice readability. */
+@media (max-width: 768px) {
+    .waterfall { opacity: 0.85; }
+}
+
+@media (max-width: 600px) {
+    .waterfall { opacity: 0.80; }
+}
+
+/* Gentle lateral undulation — applied to a wrapper around the drip
+   content so the pool stays locked in place while streams sway. */
+@keyframes oilSway {
+    0%, 100% { transform: translateX(0px); }
+    38%       { transform: translateX(1.2px); }
+    72%       { transform: translateX(-0.8px); }
+}
+
+.streamMotion {
+    animation: oilSway 20s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .streamMotion { animation: none; }
+}
+
+.debugReadout {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    z-index: 9999;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.78);
+    color: #ffd700;
+    font-size: 10px;
+    font-family: monospace;
+    pointer-events: none;
+    white-space: pre;
+    line-height: 1.5;
+}
